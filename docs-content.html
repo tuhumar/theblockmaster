@@ -1,0 +1,284 @@
+<main class="tbm-page tbm-page-docs" data-page="docs" id="page-docs">
+      <div class="tbm-docs">
+        <header class="tbm-docs-hero">
+          <h1>TheBlockMaster Docs</h1>
+          <p>Complete reference for the ECC / HD / XMR workspace — use online on GitHub Pages or run local. Includes shared STATE and AI agent browsers.</p>
+          <p class="tbm-docs-repo">
+            <a href="https://github.com/tuhumar/theblockmaster" target="_blank" rel="noopener">github.com/tuhumar/theblockmaster</a>
+            ·
+            <a href="https://tuhumar.github.io/theblockmaster/" target="_blank" rel="noopener">Official online</a>
+          </p>
+        </header>
+
+        <nav class="tbm-docs-toc" aria-label="Documentation contents">
+          <a href="#doc-overview">Overview</a>
+          <a href="#doc-run">Get started</a>
+          <a href="#doc-tabs">Site tabs</a>
+          <a href="#doc-eqir">EQIR Lab</a>
+          <a href="#doc-hd">BIP39 / BIP32</a>
+          <a href="#doc-tools">Brainwallet / Calculators</a>
+          <a href="#doc-xmr">XMR EQIR</a>
+          <a href="#doc-state">Shared STATE</a>
+          <a href="#doc-agents">AI agents &amp; browsers</a>
+          <a href="#doc-hosting">GitHub Pages</a>
+          <a href="#doc-security">Security</a>
+        </nav>
+
+        <article class="tbm-docs-body">
+          <section id="doc-overview">
+            <h2>1. Overview</h2>
+            <p><strong>TheBlockMaster</strong> is a single-origin, offline-first web app for inspecting elliptic-curve keys, HD wallets, hashes, and Monero addresses. Everything runs in the browser with deterministic BigInt / ed25519 math — no backend, no AI claim to break ECDLP.</p>
+            <ul>
+              <li><strong>Home</strong> — centered search that routes into EQIR / BIP / Brainwallet by input type.</li>
+              <li><strong>EQIR Lab</strong> — secp256k1 Double-and-Add research lab (BTC + ETH/BSC derived).</li>
+              <li><strong>BIP39 / BIP32</strong> — mnemonic &amp; HD derivation (Ian Coleman / bip32.org lineage).</li>
+              <li><strong>Brainwallet</strong> — passphrase → SHA-256 → key (educational).</li>
+              <li><strong>Calculators</strong> — hash / Base58 / hex-dec / BigInt tools.</li>
+              <li><strong>XMR</strong> — Monero EQIR lab (ed25519 spend/view/address/scalar).</li>
+              <li><strong>Docs</strong> — this page.</li>
+            </ul>
+          </section>
+
+          <section id="doc-run">
+            <h2>2. Get started</h2>
+            <p>Choose how you want to open TheBlockMaster. Crypto always runs in <em>your</em> browser — online hosting is static files only.</p>
+
+            <div class="tbm-docs-tabs" role="tablist" aria-label="Get started">
+              <button type="button" class="active" role="tab" aria-selected="true" data-docs-tab="online" id="docs-tab-online" aria-controls="docs-panel-online">Use online</button>
+              <button type="button" role="tab" aria-selected="false" data-docs-tab="local" id="docs-tab-local" aria-controls="docs-panel-local">Run local</button>
+            </div>
+
+            <div class="tbm-docs-tabpanels">
+              <div class="tbm-docs-panel active" role="tabpanel" id="docs-panel-online" data-docs-panel="online" aria-labelledby="docs-tab-online">
+                <h3>Official GitHub Pages</h3>
+                <p>Open the hosted build (same app, no install):</p>
+                <p><a class="tbm-docs-cta" href="https://tuhumar.github.io/theblockmaster/" target="_blank" rel="noopener">https://tuhumar.github.io/theblockmaster/</a></p>
+                <p>Deep links work the same as local, e.g. <code>#lab/simple</code>, <code>#bip39</code>, <code>#docs</code>.</p>
+                <p>Source: <a href="https://github.com/tuhumar/theblockmaster" target="_blank" rel="noopener">github.com/tuhumar/theblockmaster</a>.</p>
+                <ul>
+                  <li>Works on phone or desktop — just open the URL.</li>
+                  <li>Private keys still never leave the tab.</li>
+                  <li>For agent automation, prefer <strong>Run local</strong> so CDP/Playwright can hit <code>127.0.0.1</code>.</li>
+                </ul>
+              </div>
+
+              <div class="tbm-docs-panel" role="tabpanel" id="docs-panel-local" data-docs-panel="local" aria-labelledby="docs-tab-local" hidden>
+                <h3>Clone &amp; serve</h3>
+                <pre class="tbm-docs-pre">git clone https://github.com/tuhumar/theblockmaster.git
+cd theblockmaster
+python3 -m http.server 8770 --bind 127.0.0.1</pre>
+                <p>Open <code>http://127.0.0.1:8770/</code>. ES modules require HTTP (not <code>file://</code>).</p>
+                <p>Any static server works (<code>npx serve</code>, Caddy, nginx). Default lab port in this project is <strong>8770</strong>.</p>
+                <h3>Hash routes</h3>
+                <p><code>#home</code> · <code>#lab/simple</code> · <code>#lab/btc</code> · <code>#lab/eth</code> · <code>#bip39</code> · <code>#bip32</code> · <code>#brainwallet</code> · <code>#calculators</code> · <code>#xmr</code> · <code>#docs</code>.</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="doc-tabs">
+            <h2>3. Site tabs (quick map)</h2>
+            <table class="tbm-docs-table">
+              <thead><tr><th>Tab</th><th>Hash</th><th>What it does</th></tr></thead>
+              <tbody>
+                <tr><td>Home</td><td><code>#home</code></td><td>Search bar → classify pubkey / priv / address / mnemonic / xprv → open the right lab</td></tr>
+                <tr><td>EQIR Lab</td><td><code>#lab/simple</code> · <code>#lab/btc</code> · <code>#lab/eth</code></td><td>Simple = both chains; Advanced = full secp256k1 modules + derived BTC or ETH/BSC</td></tr>
+                <tr><td>BIP39</td><td><code>#bip39</code></td><td>Generate/validate mnemonic, seed, root xprv, address table</td></tr>
+                <tr><td>BIP32</td><td><code>#bip32</code></td><td>xprv/xpub <em>or passphrase</em> → path / account·index derivation</td></tr>
+                <tr><td>Brainwallet</td><td><code>#brainwallet</code></td><td>Passphrase → SHA-256 / hash256 → WIF + addresses</td></tr>
+                <tr><td>Calculators</td><td><code>#calculators</code></td><td>SHA-256, HASH256, RIPEMD-160, HASH160, Keccak, Base58, hex/XOR, BigInt</td></tr>
+                <tr><td>XMR</td><td><code>#xmr</code></td><td>Monero spend/view, address, ed25519 scalar D&amp;A, kangaroo/XOR</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="doc-eqir">
+            <h2>4. EQIR Lab (BTC · ETH/BSC)</h2>
+            <h3>Simple · Advanced</h3>
+            <p><strong>Simple</strong> (<code>#lab/simple</code>) shows private → public keys plus <strong>BTC and ETH/BSC addresses together</strong> — no chain split, no research modules or sidebars. <strong>Advanced</strong> (<code>#lab/btc</code> / <code>#lab/eth</code>) is the full lab with Double-and-Add, STATE, and modules.</p>
+            <h3>Chain subtabs</h3>
+            <p><strong>BTC</strong> shows WIF, hash160, P2PKH / P2SH-P2WPKH / P2WPKH / Taproot. <strong>ETH / BSC</strong> shows the same secp256k1 key as <code>0x</code> with etherscan / bscscan explorers. Shared pubkey panel is always visible.</p>
+            <h3>Modules</h3>
+            <ul>
+              <li><strong>Curve</strong> — secp256k1 SPEC fields.</li>
+              <li><strong>Scalar</strong> — private → public + full Double-and-Add chain (MSB-first).</li>
+              <li><strong>Reverse</strong> — public seed + ↑ Half / Half(R−G) when indices known (not an ECDLP solver).</li>
+              <li><strong>Kangaroo</strong> — Pollard lambda sandbox (small bits in-browser).</li>
+              <li><strong>XOR</strong> — reversible scalar/bit transforms + fingerprint cloud.</li>
+              <li><strong>QI Walk</strong> — classical amplitude simulation over kangaroo jumps (no quantum speedup claim).</li>
+              <li><strong>Compare</strong> — side-by-side trajectory metrics.</li>
+              <li><strong>⧉ STATE</strong> — export shared STATE JSON from the current chain.</li>
+            </ul>
+            <h3>Input &amp; chain</h3>
+            <p>Enter private hex or public (02/03/04). <strong>Priv → Pub + chain</strong> builds the operation list. <strong>seq pub → pk</strong> accepts contiguous 2P / 2P+G steps. <strong>build #1–70+#75</strong> loads the Δ·G puzzle path when the JSON asset is present.</p>
+            <h3>Sidebars</h3>
+            <p>Left: relations (collisions/repeats) + private-key history (localStorage). Right: pins + Base58/SHA/RIPEMD/calc/hex tools accordion.</p>
+          </section>
+
+          <section id="doc-hd">
+            <h2>5. BIP39 &amp; BIP32</h2>
+            <h3>BIP39</h3>
+            <p>Generate 12–24 English words, optional BIP39 passphrase, PBKDF2 seed, BIP32 root xprv/xpub, path presets (BIP44/49/84/ETH), address table with → EQIR.</p>
+            <p>Footer credit: <a href="https://iancoleman.io/" target="_blank" rel="noopener">IanColeman</a> (MIT lineage).</p>
+            <h3>BIP32</h3>
+            <p><strong>Root source</strong>:</p>
+            <ul>
+              <li><strong>Extended key</strong> — paste xprv/xpub.</li>
+              <li><strong>Passphrase</strong> — SHA-256 × rounds (default 50k, bip32.org-style) or PBKDF2-HMAC-SHA512 → master seed/xprv, then derive.</li>
+            </ul>
+            <p>Derivation mode: custom path <em>or</em> account (k) + index (i) as <code>m/k'/0/i</code>. Send child keys to EQIR BTC or ETH/BSC.</p>
+          </section>
+
+          <section id="doc-tools">
+            <h2>6. Brainwallet &amp; Calculators</h2>
+            <p><strong>Brainwallet</strong> hashes a passphrase (SHA-256 or hash256) into a secp256k1 private key and shows WIF / BTC / ETH. Unsafe for real funds — lab only.</p>
+            <p><strong>Calculators</strong> expose the same primitives as the EQIR tools sidebar in a full-page layout: hashes, Base58(check), hex↔utf8/XOR, hex↔decimal (incl. 32-byte pad), BigInt + / − / × / ÷ / mod / pow / inv / gcd.</p>
+          </section>
+
+          <section id="doc-xmr">
+            <h2>7. XMR EQIR Lab</h2>
+            <p>Monero uses <strong>ed25519</strong> (via noble-ed25519, MIT). Modules:</p>
+            <ul>
+              <li><strong>Keys</strong> — random/paste spend → <code>view = sc_reduce32(Keccak(spend))</code> → pubs → standard address (main/stage/test).</li>
+              <li><strong>Scalar</strong> — MSB-first Double-and-Add trace on ed25519.</li>
+              <li><strong>Curve</strong> — ed25519 parameters.</li>
+              <li><strong>Address</strong> — decode / checksum / re-encode Monero base58 blocks.</li>
+              <li><strong>Kangaroo / XOR</strong> — small-bit educational sandboxes.</li>
+            </ul>
+          </section>
+
+          <section id="doc-state">
+            <h2>8. Shared STATE (EQIR contract)</h2>
+            <p>EQIR modules share a STATE object per chain step:</p>
+            <pre class="tbm-docs-pre">STATE
+ ├── Point X / Y / compressed
+ ├── Scalar / bits / bitIndex
+ ├── Previous operation
+ ├── Double count / Add count
+ ├── XOR trail[]
+ ├── Kangaroo { a, b, herd, dist, jumpIdx }
+ └── fingerprint (sha256 prefix)</pre>
+            <p>Use <strong>⧉ STATE</strong> in EQIR to download <code>eqir-states.json</code>. The preview panel shows a live slice of the same JSON.</p>
+            <p>App-level shared snapshot for agents is published to <code>localStorage["tbm-shared-state"]</code> and <code>window.TheBlockMaster</code> (see next section).</p>
+          </section>
+
+          <section id="doc-agents">
+            <h2>9. Connect an AI agent (shared STATE + agent browsers)</h2>
+            <p>TheBlockMaster exposes a first-class bridge so Cursor Agent, Playwright, Chrome DevTools, or any agent browser can read/write lab state without a server.</p>
+
+            <h3>9.1 Global API</h3>
+            <p>In the page console or via <code>Runtime.evaluate</code> / agent browser JS:</p>
+            <pre class="tbm-docs-pre">// snapshot (includes secrets by default — treat as sensitive)
+TheBlockMaster.getSnapshot()
+TheBlockMaster.getSnapshot({ includeSecrets: false })
+
+// publish to localStorage + BroadcastChannel + events
+TheBlockMaster.publish()
+
+// navigate + fill
+TheBlockMaster.goto('lab', { chain: 'btc' })
+TheBlockMaster.setPriv('1')
+TheBlockMaster.setPub('02…')
+TheBlockMaster.applySnapshot({
+  page: 'bip39',
+  inputs: { bip39Phrase: 'abandon abandon … about' }
+})
+
+// subscribe
+TheBlockMaster.subscribe((snap) => console.log(snap.page, snap.derived))</pre>
+            <p>Aliases: <code>window.__tbmAgent</code> === <code>window.TheBlockMaster</code>.</p>
+
+            <h3>9.2 Persistence channels</h3>
+            <table class="tbm-docs-table">
+              <thead><tr><th>Channel</th><th>Key / name</th><th>Use</th></tr></thead>
+              <tbody>
+                <tr><td>localStorage</td><td><code>tbm-shared-state</code></td><td>Durable snapshot for same-origin agent scripts</td></tr>
+                <tr><td>BroadcastChannel</td><td><code>tbm-shared-state</code></td><td>Multi-tab / multi-frame sync</td></tr>
+                <tr><td>CustomEvent</td><td><code>tbm:state</code></td><td>In-page listeners</td></tr>
+                <tr><td>postMessage</td><td><code>{ source:'theblockmaster' }</code></td><td>iframes / extension / parent agents</td></tr>
+              </tbody>
+            </table>
+
+            <h3>9.3 postMessage protocol (iframe / extension)</h3>
+            <pre class="tbm-docs-pre">// Agent → TheBlockMaster
+iframe.contentWindow.postMessage({
+  target: 'theblockmaster',
+  type: 'getSnapshot',
+  includeSecrets: true,
+  id: '1'
+}, '*')
+
+iframe.contentWindow.postMessage({
+  target: 'theblockmaster',
+  type: 'applySnapshot',
+  id: '2',
+  snapshot: { page: 'xmr', inputs: { xmrSpend: '…' } }
+}, '*')
+
+iframe.contentWindow.postMessage({
+  target: 'theblockmaster',
+  type: 'goto',
+  page: 'calculators'
+}, '*')
+
+// TheBlockMaster → Agent
+// { source:'theblockmaster', type:'snapshot'|'applied', id, snapshot }</pre>
+
+            <h3>9.4 Agent browser playbook (Cursor / CDP / Playwright)</h3>
+            <ol>
+              <li>Start the static server on <code>:8770</code>.</li>
+              <li>Open or navigate the agent browser to <code>http://127.0.0.1:8770/#lab/btc</code>.</li>
+              <li>Evaluate <code>TheBlockMaster.getSnapshot()</code> to read page, chain, inputs, derived addresses, STATE preview.</li>
+              <li>To drive the lab: <code>TheBlockMaster.applySnapshot({…})</code> or fill DOM fields (<code>#priv</code>, <code>#pub</code>, <code>#bip39-phrase</code>, <code>#xmr-spend</code>, …) then click the existing buttons.</li>
+              <li>Prefer hash routes for deep links (<code>#bip32</code>, <code>#xmr</code>) so the agent can bookmark steps.</li>
+              <li>For multi-step research, call <code>TheBlockMaster.publish()</code> after each action so <code>localStorage['tbm-shared-state']</code> stays current for other agent turns.</li>
+            </ol>
+            <pre class="tbm-docs-pre">// Playwright example
+await page.goto('http://127.0.0.1:8770/#lab/btc')
+await page.waitForFunction(() => window.TheBlockMaster)
+await page.evaluate(() => TheBlockMaster.setPriv('1'))
+await page.click('#btn-fwd')
+const snap = await page.evaluate(() => TheBlockMaster.publish())
+console.log(snap.derived)</pre>
+
+            <h3>9.5 Suggested agent workflow</h3>
+            <ol>
+              <li><strong>Orient</strong> — <code>getSnapshot()</code> or open <code>#docs</code>.</li>
+              <li><strong>Choose surface</strong> — EQIR for secp256k1 trails, BIP39/32 for HD, XMR for Monero, Calculators for hashes.</li>
+              <li><strong>Write inputs</strong> via API or DOM; never exfiltrate secrets to remote tools unless the user asked.</li>
+              <li><strong>Run UI actions</strong> (Priv→Pub, Derive, Decode) the same way a human would.</li>
+              <li><strong>Read STATE</strong> — export JSON, preview panel, or <code>publish()</code> snapshot for the next agent step.</li>
+            </ol>
+          </section>
+
+          <section id="doc-hosting">
+            <h2>10. GitHub Pages (official host)</h2>
+            <p>The official online build is static hosting from
+              <a href="https://github.com/tuhumar/theblockmaster" target="_blank" rel="noopener">github.com/tuhumar/theblockmaster</a>
+              → <a href="https://tuhumar.github.io/theblockmaster/" target="_blank" rel="noopener">tuhumar.github.io/theblockmaster</a>.</p>
+            <ol>
+              <li>Repo → <strong>Settings → Pages</strong></li>
+              <li>Source: <strong>Deploy from a branch</strong></li>
+              <li>Branch: <code>main</code> · folder: <strong>/ (root)</strong></li>
+              <li>Keep <code>.nojekyll</code> at the repo root so GitHub does not strip assets</li>
+            </ol>
+            <p>License of this project: <strong>GPL-3.0</strong> (<code>LICENSE</code>).</p>
+          </section>
+
+          <section id="doc-security">
+            <h2>11. Security &amp; limits</h2>
+            <ul>
+              <li>All crypto is <strong>local</strong>. Balance lookups (EQIR derived panel) are the only optional network calls.</li>
+              <li>Brainwallet / BIP32 passphrase modes are <strong>educational</strong> — low entropy is crackable.</li>
+              <li>Kangaroo / QI modules are sandboxes for small bit widths, not puzzle solvers.</li>
+              <li>Agent snapshots may contain private keys. Use <code>includeSecrets: false</code> when sharing logs.</li>
+              <li>TheBlockMaster itself is <strong>GPL-3.0</strong> — see <code>LICENSE</code> in the repo. Third-party dependencies keep their own notices (Ian Coleman lineage MIT, noble-ed25519 MIT, bip32.org public-domain lineage) in UI footers.</li>
+            </ul>
+            <div class="tbm-home-cta">
+              <button type="button" class="primary" data-goto="lab" data-goto-chain="btc">Open EQIR · BTC</button>
+              <button type="button" class="ghost" data-goto="xmr">Open XMR</button>
+              <button type="button" class="ghost" data-goto="home">Home</button>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>

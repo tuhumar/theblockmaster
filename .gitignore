@@ -1,0 +1,16 @@
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/
+node_modules/
+
+# Local research dumps (keep js/data/ puzzle assets)
+/pattern_*.json
+/pattern_*.txt
+/puzzles_1_160_pk_study.json
+/puzzles_1_160_pk_notes.txt
+/puzzles_curve_batch_report.json
+/puzzles_curve_batch_REPORT.txt
+/puzzles_every5_ladder_1_160.json
+/CONTINUA_STATUS.json

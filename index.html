@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TheBlockMaster — EQIR Lab</title>
+  <meta name="description" content="TheBlockMaster — ECC research workspace. EQIR Lab tab: Double-and-Add, Kangaroo, XOR, quantum-inspired walks." />
+  <link rel="stylesheet" href="css/interface.css?v=tbm23" />
+  <link rel="stylesheet" href="css/theblockmaster.css?v=tbm23" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("tbm-theme");
+        if (t !== "light" && t !== "dark") {
+          t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div class="tbm-site">
+    <header class="tbm-topbar">
+      <a class="tbm-brand" href="#home" data-goto="home">
+        <div class="tbm-brand-mark">The<span>Block</span>Master</div>
+        <div class="tbm-brand-sub">ECC research workspace</div>
+      </a>
+      <div class="tbm-topbar-right">
+        <nav class="tbm-site-tabs" aria-label="Site sections">
+          <button type="button" data-page="home">Home</button>
+          <button type="button" data-page="lab" class="active">EQIR Lab</button>
+          <button type="button" data-page="bip39">BIP39</button>
+          <button type="button" data-page="bip32">BIP32</button>
+          <button type="button" data-page="brainwallet">Brainwallet</button>
+          <button type="button" data-page="calculators">Calculators</button>
+          <button type="button" data-page="xmr">XMR</button>
+          <button type="button" data-page="docs">Docs</button>
+        </nav>
+        <button type="button" class="tbm-theme-toggle" id="tbm-theme-toggle" title="Toggle light / dark" aria-label="Toggle light / dark theme">
+          <span class="tbm-theme-icon" aria-hidden="true">◐</span>
+          <span class="tbm-theme-label">Dark</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="tbm-page tbm-page-home" data-page="home" id="page-home">
+      <div class="tbm-home">
+        <h1 class="tbm-home-brand">The<span>Block</span>Master</h1>
+        <p class="tbm-home-lead">Inspect keys, addresses, and ECC paths — locally in the browser.</p>
+        <form class="tbm-search" id="tbm-home-search" action="#lab" method="get" role="search">
+          <label class="visually-hidden" for="tbm-search-q">Search</label>
+          <div class="tbm-search-shell">
+            <input
+              id="tbm-search-q"
+              name="q"
+              type="search"
+              autocomplete="off"
+              spellcheck="false"
+              enterkeyhint="search"
+              placeholder="pubkey · priv hex / WIF · BTC/ETH addr · mnemonic · xprv · brainwallet · vanity…"
+            />
+            <button type="submit" class="tbm-search-go" title="Detect type and open the right tab">Search</button>
+          </div>
+        </form>
+        <p class="tbm-home-note">100% local · private keys never leave this tab · secp256k1</p>
+      </div>
+    </main>
+
+        <main class="tbm-page tbm-page-bip tbm-page-bip39" data-page="bip39" id="page-bip39">
+      <div class="hd-shell wrap">
+        <header class="top">
+          <div>
+            <h1>BIP39</h1>
+            <p>Mnemonic phrases · seed · HD derivation · 100% local · EQIR-compatible</p>
+          </div>
+        </header>
+        <div id="hd-flash-bip39" class="hd-flash"></div>
+
+        <section class="card">
+            <h2>BIP39 mnemonic <span class="muted" id="bip39-status"></span></h2>
+            <p class="muted">Generate or paste a phrase · optional passphrase · derive BTC addresses (Ian Coleman–style)</p>
+            <div class="actions">
+              <select id="bip39-strength" title="word count">
+                <option value="12" selected>12 words</option>
+                <option value="15">15 words</option>
+                <option value="18">18 words</option>
+                <option value="21">21 words</option>
+                <option value="24">24 words</option>
+              </select>
+              <button type="button" id="btn-bip39-generate">Generate random phrase</button>
+              <button type="button" class="ghost" id="btn-bip39-to-bip32">Root xprv → BIP32</button>
+            </div>
+            <div class="field">
+              <label>BIP39 phrase</label>
+              <textarea id="bip39-phrase" rows="3" spellcheck="false" placeholder="abandon abandon … about"></textarea>
+            </div>
+            <div class="field">
+              <label>BIP39 passphrase (optional)</label>
+              <input id="bip39-pass" type="text" spellcheck="false" placeholder="optional" />
+            </div>
+            <div class="field">
+              <label>BIP39 seed (hex)</label>
+              <div class="with-copy">
+                <input id="bip39-seed" type="text" spellcheck="false" readonly />
+                <button type="button" class="ghost sm copy-btn" data-copy="bip39-seed">⧉</button>
+              </div>
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label>BIP32 root xprv</label>
+                <div class="with-copy">
+                  <input id="bip39-root-xprv" type="text" spellcheck="false" readonly />
+                  <button type="button" class="ghost sm copy-btn" data-copy="bip39-root-xprv">⧉</button>
+                </div>
+              </div>
+              <div class="field">
+                <label>BIP32 root xpub</label>
+                <div class="with-copy">
+                  <input id="bip39-root-xpub" type="text" spellcheck="false" readonly />
+                  <button type="button" class="ghost sm copy-btn" data-copy="bip39-root-xpub">⧉</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <h2>Derivation path</h2>
+            <div class="actions">
+              <button type="button" class="ghost sm" data-bip39-preset="m/44'/0'/0'/0">BIP44 BTC</button>
+              <button type="button" class="ghost sm" data-bip39-preset="m/49'/0'/0'/0">BIP49 nested SegWit</button>
+              <button type="button" class="ghost sm" data-bip39-preset="m/84'/0'/0'/0">BIP84 native SegWit</button>
+              <button type="button" class="ghost sm" data-bip39-preset="m/44'/60'/0'/0">BIP44 ETH</button>
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label>Path (account / change level)</label>
+                <input id="bip39-path" type="text" spellcheck="false" value="m/44'/0'/0'/0" />
+              </div>
+              <div class="field">
+                <label>Address index start · count</label>
+                <div class="priv-nudge">
+                  <input id="bip39-start" type="text" value="0" title="start index" />
+                  <span class="hint">…</span>
+                  <input id="bip39-count" type="text" value="5" title="how many" />
+                </div>
+              </div>
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label>Account xprv (at path)</label>
+                <input id="bip39-acct-xprv" type="text" spellcheck="false" readonly />
+              </div>
+              <div class="field">
+                <label>Account xpub</label>
+                <input id="bip39-acct-xpub" type="text" spellcheck="false" readonly />
+              </div>
+            </div>
+            <div class="hd-table-wrap">
+              <table class="hd-table" id="bip39-table">
+                <thead>
+                  <tr>
+                    <th>Path</th>
+                    <th>Address</th>
+                    <th>Pub</th>
+                    <th>WIF</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="bip39-table-body"></tbody>
+              </table>
+            </div>
+          </section>
+
+        <footer class="hd-footer">
+          Thanks to
+          <a href="https://iancoleman.io/" target="_blank" rel="noopener noreferrer">IanColeman</a>
+        </footer>
+      </div>
+    </main>
+
+    <main class="tbm-page tbm-page-bip tbm-page-bip32" data-page="bip32" id="page-bip32">
+      <div class="hd-shell wrap">
+        <header class="top">
+          <div>
+            <h1>BIP32</h1>
+            <p>Extended keys · path derivation · 100% local · EQIR-compatible</p>
+          </div>
+        </header>
+        <div id="hd-flash-bip32" class="hd-flash"></div>
+
+          <section class="card">
+            <h2>BIP32 root <span class="muted" id="bip32-status"></span></h2>
+            <p class="muted">Use xprv/xpub <em>or</em> a passphrase (bip32.org-style) · derive locally · send to EQIR</p>
+            <div class="field">
+              <label>Root source</label>
+              <select id="bip32-source">
+                <option value="xkey" selected>Extended key (xprv / xpub)</option>
+                <option value="passphrase">Passphrase</option>
+              </select>
+            </div>
+
+            <div id="bip32-source-xkey">
+              <div class="field">
+                <label>BIP32 extended key</label>
+                <textarea id="bip32-xkey" rows="2" spellcheck="false" placeholder="xprv… or xpub…"></textarea>
+              </div>
+            </div>
+
+            <div id="bip32-source-pass" hidden>
+              <div class="field">
+                <label>Passphrase</label>
+                <textarea id="bip32-pass" rows="2" spellcheck="false" placeholder="type a passphrase…"></textarea>
+              </div>
+              <div class="grid2">
+                <div class="field">
+                  <label>Salt (optional)</label>
+                  <input id="bip32-pass-salt" type="text" spellcheck="false" placeholder="empty = no salt" />
+                </div>
+                <div class="field">
+                  <label>Stretch</label>
+                  <select id="bip32-pass-stretch">
+                    <option value="sha256x" selected>SHA-256 × rounds (bip32.org-style)</option>
+                    <option value="pbkdf2">PBKDF2-HMAC-SHA512</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid2">
+                <div class="field">
+                  <label>Rounds</label>
+                  <input id="bip32-pass-rounds" type="text" value="50000" title="50k matches classic bip32.org worker" />
+                </div>
+                <div class="field">
+                  <label></label>
+                  <button type="button" id="btn-bip32-from-pass" style="width:100%">Derive master from passphrase</button>
+                </div>
+              </div>
+              <div class="field">
+                <label>Master seed (hex, from passphrase)</label>
+                <input id="bip32-pass-seed" type="text" spellcheck="false" readonly />
+              </div>
+              <div class="field">
+                <label>Master xprv (from passphrase)</label>
+                <div class="with-copy">
+                  <input id="bip32-pass-xprv" type="text" spellcheck="false" readonly />
+                  <button type="button" class="ghost sm copy-btn" data-copy="bip32-pass-xprv">⧉</button>
+                </div>
+              </div>
+              <p class="muted">Low-entropy passphrases are unsafe — lab / education only.</p>
+            </div>
+
+            <div class="grid2">
+              <div class="field">
+                <label>Derivation mode</label>
+                <select id="bip32-mode">
+                  <option value="path" selected>Custom path</option>
+                  <option value="ki">Account (k) + index (i) · m/k'/0/i</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Derivation path</label>
+                <input id="bip32-path" type="text" spellcheck="false" value="m/0'/0/0" />
+              </div>
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label>Account (k)</label>
+                <div class="priv-nudge">
+                  <input id="bip32-account" type="text" value="0" />
+                  <label class="tool-check"><input type="checkbox" id="bip32-account-hard" checked /> hardened</label>
+                </div>
+              </div>
+              <div class="field">
+                <label>Keypair index (i)</label>
+                <input id="bip32-index" type="text" value="0" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Resolved path</label>
+              <input id="bip32-path-out" type="text" readonly />
+            </div>
+            <div class="field">
+              <label>Key info</label>
+              <textarea id="bip32-info" rows="8" spellcheck="false" readonly class="mono"></textarea>
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label>Private key (WIF)</label>
+                <input id="bip32-wif" type="text" spellcheck="false" readonly />
+              </div>
+              <div class="field">
+                <label>Public key</label>
+                <input id="bip32-pub" type="text" spellcheck="false" readonly />
+              </div>
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label>BTC address</label>
+                <input id="bip32-addr" type="text" spellcheck="false" readonly />
+              </div>
+              <div class="field">
+                <label>ETH / BSC address</label>
+                <input id="bip32-eth" type="text" spellcheck="false" readonly />
+              </div>
+            </div>
+            <div class="actions">
+              <button type="button" id="btn-bip32-eqir" data-priv="">→ EQIR · BTC</button>
+              <button type="button" class="ghost" id="btn-bip32-eqir-eth">→ EQIR · ETH/BSC</button>
+            </div>
+          </section>
+
+        <footer class="hd-footer">
+          Thanks to
+          <a href="https://iancoleman.io/" target="_blank" rel="noopener noreferrer">IanColeman</a>
+          ·
+          <a href="http://bip32.org/" target="_blank" rel="noopener noreferrer">bip32.org</a>
+        </footer>
+      </div>
+    </main>
+
+
+    <main class="tbm-page tbm-page-bip" data-page="brainwallet" id="page-brainwallet">
+      <div class="hd-shell wrap">
+        <header class="top">
+          <div>
+            <h1>Brainwallet</h1>
+            <p>Passphrase → SHA-256 → private key · local only · not for real funds</p>
+          </div>
+        </header>
+        <div id="bw-flash" class="hd-flash"></div>
+        <section class="card">
+          <h2>Passphrase</h2>
+          <p class="muted">Classic brainwallet derivation. Low-entropy phrases are trivially cracked — education / lab only.</p>
+          <div class="field">
+            <label>Passphrase</label>
+            <textarea id="bw-pass" rows="3" spellcheck="false" placeholder="type a passphrase…"></textarea>
+          </div>
+          <div class="field">
+            <label>Hash mode</label>
+            <select id="bw-mode">
+              <option value="sha256" selected>SHA-256(passphrase)</option>
+              <option value="hash256">SHA-256² (hash256)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Private key (hex)</label>
+            <div class="with-copy">
+              <input id="bw-priv" type="text" spellcheck="false" readonly />
+              <button type="button" class="ghost sm copy-btn" data-copy="bw-priv">⧉</button>
+            </div>
+          </div>
+          <div class="grid2">
+            <div class="field">
+              <label>WIF compressed</label>
+              <input id="bw-wif-c" type="text" spellcheck="false" readonly />
+            </div>
+            <div class="field">
+              <label>WIF uncompressed</label>
+              <input id="bw-wif-u" type="text" spellcheck="false" readonly />
+            </div>
+          </div>
+          <div class="field">
+            <label>Pubkey compressed</label>
+            <input id="bw-pub" type="text" spellcheck="false" readonly />
+          </div>
+          <div class="grid2">
+            <div class="field">
+              <label>BTC P2PKH</label>
+              <input id="bw-p2pkh" type="text" spellcheck="false" readonly />
+            </div>
+            <div class="field">
+              <label>BTC P2WPKH</label>
+              <input id="bw-p2wpkh" type="text" spellcheck="false" readonly />
+            </div>
+          </div>
+          <div class="field">
+            <label>ETH / BSC</label>
+            <input id="bw-eth" type="text" spellcheck="false" readonly />
+          </div>
+          <div class="actions">
+            <button type="button" id="btn-bw-eqir">→ EQIR · BTC</button>
+            <button type="button" class="ghost" id="btn-bw-eqir-eth">→ EQIR · ETH/BSC</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <main class="tbm-page tbm-page-calc" data-page="calculators" id="page-calculators">
+      <div class="calc-shell wrap">
+        <header class="top calc-top">
+          <div>
+            <h1>Calculators</h1>
+            <p>SHA-256 · RIPEMD-160 · HASH160 · Base58 · hex/dec · BigInt math · 100% local</p>
+          </div>
+        </header>
+
+        <div class="calc-grid">
+          <section class="card calc-card">
+            <h2>Hash</h2>
+            <p class="calc-card-lead">SHA-256 · HASH256 · RIPEMD-160 · HASH160 · Keccak-256</p>
+            <div class="field">
+              <label>Input</label>
+              <textarea id="calc-hash-in" class="calc-area" rows="5" spellcheck="false" placeholder="text or hex…"></textarea>
+            </div>
+            <div class="actions calc-actions">
+              <select id="calc-hash-mode">
+                <option value="utf8" selected>utf8</option>
+                <option value="hex">hex</option>
+              </select>
+              <select id="calc-hash-kind">
+                <option value="sha256" selected>sha256</option>
+                <option value="hash256">hash256</option>
+                <option value="ripemd160">ripemd160</option>
+                <option value="hash160">hash160</option>
+                <option value="keccak256">keccak256</option>
+              </select>
+              <button type="button" id="btn-calc-hash">hash →</button>
+            </div>
+            <pre id="calc-hash-out" class="tool-out calc-out"></pre>
+          </section>
+
+          <section class="card calc-card">
+            <h2>Base58</h2>
+            <p class="calc-card-lead">Encode / decode · optional checksum</p>
+            <div class="field">
+              <label>Input (hex / utf8 / base58)</label>
+              <textarea id="calc-b58-in" class="calc-area" rows="5" spellcheck="false" placeholder="hex or base58…"></textarea>
+            </div>
+            <div class="actions calc-actions">
+              <select id="calc-b58-mode">
+                <option value="hex" selected>in hex</option>
+                <option value="utf8">in utf8</option>
+              </select>
+              <label class="tool-check"><input type="checkbox" id="calc-b58-check" /> check</label>
+              <button type="button" class="ghost" id="btn-calc-b58-enc">encode →</button>
+              <button type="button" class="ghost" id="btn-calc-b58-dec">← decode</button>
+            </div>
+            <pre id="calc-b58-out" class="tool-out calc-out"></pre>
+          </section>
+
+          <section class="card calc-card">
+            <h2>Hex · UTF-8 · XOR</h2>
+            <p class="calc-card-lead">Convert · reverse bytes · XOR</p>
+            <div class="field">
+              <label>Input</label>
+              <textarea id="calc-hex-in" class="calc-area" rows="4" spellcheck="false" placeholder="hex or text…"></textarea>
+            </div>
+            <div class="field">
+              <label>Hex B (XOR)</label>
+              <input id="calc-hex-b" type="text" spellcheck="false" placeholder="hex B" />
+            </div>
+            <div class="actions calc-actions">
+              <button type="button" class="ghost" id="btn-calc-hex-utf8">hex→utf8</button>
+              <button type="button" class="ghost" id="btn-calc-utf8-hex">utf8→hex</button>
+              <button type="button" class="ghost" id="btn-calc-hex-rev">reverse</button>
+              <button type="button" class="ghost" id="btn-calc-hex-xor">XOR</button>
+            </div>
+            <pre id="calc-hex-out" class="tool-out calc-out"></pre>
+          </section>
+
+          <section class="card calc-card">
+            <h2>Hex ↔ decimal</h2>
+            <p class="calc-card-lead">BigInt-safe · pad to 32 bytes</p>
+            <div class="field">
+              <label>Number (dec or 0x… / hex)</label>
+              <textarea id="calc-num-in" class="calc-area" rows="3" spellcheck="false" placeholder="e.g. 255 or ff or 0xff"></textarea>
+            </div>
+            <div class="actions calc-actions">
+              <button type="button" id="btn-calc-hex2dec">show both</button>
+              <button type="button" class="ghost" id="btn-calc-dec2hex">→ hex</button>
+              <button type="button" class="ghost" id="btn-calc-pad32">→ 32-byte hex</button>
+            </div>
+            <pre id="calc-num-out" class="tool-out calc-out"></pre>
+          </section>
+
+          <section class="card calc-card calc-card-wide">
+            <h2>BigInt calculator</h2>
+            <p class="calc-card-lead">+ − × ÷ · mod · pow · inverse · gcd</p>
+            <div class="grid2">
+              <div class="field">
+                <label>a</label>
+                <textarea id="calc-math-a" class="calc-area" rows="3" spellcheck="false" placeholder="a"></textarea>
+              </div>
+              <div class="field">
+                <label>b</label>
+                <textarea id="calc-math-b" class="calc-area" rows="3" spellcheck="false" placeholder="b"></textarea>
+              </div>
+            </div>
+            <div class="field">
+              <label>m (for a^b mod m)</label>
+              <textarea id="calc-math-m" class="calc-area" rows="2" spellcheck="false" placeholder="modulus"></textarea>
+            </div>
+            <div class="actions calc-actions">
+              <select id="calc-math-op">
+                <option value="+">+</option>
+                <option value="-">−</option>
+                <option value="*">×</option>
+                <option value="/">÷</option>
+                <option value="%">mod</option>
+                <option value="^">a^b mod m</option>
+                <option value="inv">inv(a) mod b</option>
+                <option value="gcd">gcd</option>
+              </select>
+              <label class="tool-check"><input type="checkbox" id="calc-math-hex" /> hex out</label>
+              <button type="button" id="btn-calc-math">compute</button>
+            </div>
+            <pre id="calc-math-out" class="tool-out calc-out"></pre>
+          </section>
+        </div>
+      </div>
+    </main>
+
+
+    <main class="tbm-page tbm-page-lab tbm-page-xmr" data-page="xmr" id="page-xmr">
+      <div class="hd-shell wrap xmr-shell">
+        <header class="top">
+          <div>
+            <h1>XMR EQIR Lab</h1>
+            <p>Monero · ed25519 · spend/view · standard address · scalar Double-and-Add · 100% local</p>
+          </div>
+        </header>
+
+        <nav class="eqir-mod-nav" id="xmr-mod-nav" aria-label="XMR EQIR modules">
+          <button type="button" class="ghost sm" data-xmr-mod="curve">Curve</button>
+          <button type="button" class="ghost sm" data-xmr-mod="scalar">Scalar</button>
+          <button type="button" class="ghost sm active" data-xmr-mod="keys">Keys</button>
+          <button type="button" class="ghost sm" data-xmr-mod="address">Address</button>
+          <button type="button" class="ghost sm" data-xmr-mod="kangaroo">Kangaroo</button>
+          <button type="button" class="ghost sm" data-xmr-mod="xor">XOR</button>
+        </nav>
+        <p class="muted eqir-mod-hint" id="xmr-mod-hint"></p>
+        <div id="xmr-flash" class="hd-flash"></div>
+
+        <div class="xmr-panel" data-xmr-panel="keys" id="xmr-panel-keys">
+          <section class="card">
+            <h2>Spend / view keys <span class="muted" id="xmr-keys-status"></span></h2>
+            <p class="muted">view = sc_reduce32(Keccak-256(spend)) · pubs = spend·G / view·G on ed25519</p>
+            <div class="field">
+              <label>Network</label>
+              <select id="xmr-net">
+                <option value="mainnet" selected>mainnet (0x12)</option>
+                <option value="stagenet">stagenet (0x18)</option>
+                <option value="testnet">testnet (0x35)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Private spend key (32-byte hex, little-endian)</label>
+              <div class="with-copy">
+                <input id="xmr-spend" type="text" spellcheck="false" placeholder="64 hex chars" />
+                <button type="button" class="ghost sm copy-btn" data-copy="xmr-spend">⧉</button>
+              </div>
+            </div>
+            <div class="actions">
+              <button type="button" id="btn-xmr-random">🎲 random spend</button>
+              <button type="button" id="btn-xmr-derive">Derive keys + address</button>
+              <button type="button" class="ghost" id="btn-xmr-scalar">Scalar trace →</button>
+            </div>
+            <div class="field">
+              <label>Private view key</label>
+              <div class="with-copy">
+                <input id="xmr-view" type="text" spellcheck="false" readonly />
+                <button type="button" class="ghost sm copy-btn" data-copy="xmr-view">⧉</button>
+              </div>
+            </div>
+            <div class="grid2">
+              <div class="field">
+                <label>Public spend</label>
+                <input id="xmr-pub-spend" type="text" spellcheck="false" readonly />
+              </div>
+              <div class="field">
+                <label>Public view</label>
+                <input id="xmr-pub-view" type="text" spellcheck="false" readonly />
+              </div>
+            </div>
+            <div class="field">
+              <label>Standard address</label>
+              <div class="with-copy">
+                <input id="xmr-address" type="text" spellcheck="false" readonly />
+                <button type="button" class="ghost sm copy-btn" data-copy="xmr-address">⧉</button>
+              </div>
+            </div>
+            <div class="field">
+              <label>Spend scalar (decimal)</label>
+              <input id="xmr-scalar-dec" type="text" spellcheck="false" readonly />
+            </div>
+          </section>
+        </div>
+
+        <div class="xmr-panel" data-xmr-panel="scalar" id="xmr-panel-scalar" hidden>
+          <section class="card">
+            <h2>Scalar · Double-and-Add <span class="muted" id="xmr-scalar-stats"></span></h2>
+            <p class="muted">Uses current spend key · ed25519 MSB-first · pub should match public spend</p>
+            <div class="field">
+              <label>Resulting public key</label>
+              <input id="xmr-scalar-pub" type="text" spellcheck="false" readonly />
+            </div>
+            <div id="xmr-chain" class="xmr-chain"></div>
+          </section>
+        </div>
+
+        <div class="xmr-panel" data-xmr-panel="curve" id="xmr-panel-curve" hidden>
+          <section class="card">
+            <h2>Ed25519 SPEC</h2>
+            <div class="grid2">
+              <div class="field"><label>name</label><input id="xmr-curve-name" readonly /></div>
+              <div class="field"><label>equation</label><input id="xmr-curve-eq" readonly /></div>
+            </div>
+            <div class="field"><label>p (hex)</label><input id="xmr-curve-p" readonly /></div>
+            <div class="field"><label>ℓ order (hex)</label><input id="xmr-curve-l" readonly /></div>
+            <div class="field"><label>G (compressed hex)</label><input id="xmr-curve-gx" readonly /></div>
+          </section>
+        </div>
+
+        <div class="xmr-panel" data-xmr-panel="address" id="xmr-panel-address" hidden>
+          <section class="card">
+            <h2>Address decode <span class="muted" id="xmr-addr-status"></span></h2>
+            <div class="field">
+              <label>Monero address</label>
+              <textarea id="xmr-addr-in" rows="2" spellcheck="false" placeholder="4…"></textarea>
+            </div>
+            <div class="actions">
+              <button type="button" id="btn-xmr-decode">Decode</button>
+            </div>
+            <div class="field"><label>Network</label><input id="xmr-addr-net" readonly /></div>
+            <div class="field"><label>Public spend</label><input id="xmr-addr-ps" readonly /></div>
+            <div class="field"><label>Public view</label><input id="xmr-addr-pv" readonly /></div>
+            <div class="field"><label>Re-encoded</label><input id="xmr-addr-rebuild" readonly /></div>
+          </section>
+        </div>
+
+        <div class="xmr-panel" data-xmr-panel="kangaroo" id="xmr-panel-kangaroo" hidden>
+          <section class="card">
+            <h2>Kangaroo lab (tiny bits)</h2>
+            <p class="muted">Educational only on ed25519 — bits ≤ 16 recommended in-browser.</p>
+            <div class="field"><label>bits</label><input id="xmr-kang-bits" value="12" /></div>
+            <div class="actions"><button type="button" id="btn-xmr-kang">Selftest</button></div>
+            <pre id="xmr-kang-out" class="tool-out"></pre>
+          </section>
+        </div>
+
+        <div class="xmr-panel" data-xmr-panel="xor" id="xmr-panel-xor" hidden>
+          <section class="card">
+            <h2>XOR lab</h2>
+            <div class="actions">
+              <button type="button" class="ghost" id="btn-xmr-load-view">load spend / view</button>
+              <button type="button" id="btn-xmr-xor">a ⊕ b</button>
+            </div>
+            <div class="grid2">
+              <div class="field"><label>a (hex)</label><input id="xmr-xor-a" spellcheck="false" /></div>
+              <div class="field"><label>b (hex)</label><input id="xmr-xor-b" spellcheck="false" /></div>
+            </div>
+            <div class="field"><label>out</label><input id="xmr-xor-out" readonly /></div>
+          </section>
+        </div>
+
+        <footer class="hd-footer">
+          XMR EQIR · ed25519 via
+          <a href="https://github.com/paulmillr/noble-ed25519" target="_blank" rel="noopener noreferrer">noble-ed25519</a>
+          (MIT) · Monero address format per getmonero.org docs
+        </footer>
+      </div>
+    </main>
+
+<main class="tbm-page tbm-page-docs" data-page="docs" id="page-docs">
+      <div class="tbm-docs">
+        <header class="tbm-docs-hero">
+          <h1>TheBlockMaster Docs</h1>
+          <p>Complete reference for the ECC / HD / XMR workspace — use online on GitHub Pages or run local. Includes shared STATE and AI agent browsers.</p>
+          <p class="tbm-docs-repo">
+            <a href="https://github.com/tuhumar/theblockmaster" target="_blank" rel="noopener">github.com/tuhumar/theblockmaster</a>
+            ·
+            <a href="https://tuhumar.github.io/theblockmaster/" target="_blank" rel="noopener">Official online</a>
+          </p>
+        </header>
+
+        <nav class="tbm-docs-toc" aria-label="Documentation contents">
+          <a href="#doc-overview">Overview</a>
+          <a href="#doc-run">Get started</a>
+          <a href="#doc-tabs">Site tabs</a>
+          <a href="#doc-eqir">EQIR Lab</a>
+          <a href="#doc-hd">BIP39 / BIP32</a>
+          <a href="#doc-tools">Brainwallet / Calculators</a>
+          <a href="#doc-xmr">XMR EQIR</a>
+          <a href="#doc-state">Shared STATE</a>
+          <a href="#doc-agents">AI agents &amp; browsers</a>
+          <a href="#doc-hosting">GitHub Pages</a>
+          <a href="#doc-security">Security</a>
+        </nav>
+
+        <article class="tbm-docs-body">
+          <section id="doc-overview">
+            <h2>1. Overview</h2>
+            <p><strong>TheBlockMaster</strong> is a single-origin, offline-first web app for inspecting elliptic-curve keys, HD wallets, hashes, and Monero addresses. Everything runs in the browser with deterministic BigInt / ed25519 math — no backend, no AI claim to break ECDLP.</p>
+            <ul>
+              <li><strong>Home</strong> — centered search that routes into EQIR / BIP / Brainwallet by input type.</li>
+              <li><strong>EQIR Lab</strong> — secp256k1 Double-and-Add research lab (BTC + ETH/BSC derived).</li>
+              <li><strong>BIP39 / BIP32</strong> — mnemonic &amp; HD derivation (Ian Coleman / bip32.org lineage).</li>
+              <li><strong>Brainwallet</strong> — passphrase → SHA-256 → key (educational).</li>
+              <li><strong>Calculators</strong> — hash / Base58 / hex-dec / BigInt tools.</li>
+              <li><strong>XMR</strong> — Monero EQIR lab (ed25519 spend/view/address/scalar).</li>
+              <li><strong>Docs</strong> — this page.</li>
+            </ul>
+          </section>
+
+          <section id="doc-run">
+            <h2>2. Get started</h2>
+            <p>Choose how you want to open TheBlockMaster. Crypto always runs in <em>your</em> browser — online hosting is static files only.</p>
+
+            <div class="tbm-docs-tabs" role="tablist" aria-label="Get started">
+              <button type="button" class="active" role="tab" aria-selected="true" data-docs-tab="online" id="docs-tab-online" aria-controls="docs-panel-online">Use online</button>
+              <button type="button" role="tab" aria-selected="false" data-docs-tab="local" id="docs-tab-local" aria-controls="docs-panel-local">Run local</button>
+            </div>
+
+            <div class="tbm-docs-tabpanels">
+              <div class="tbm-docs-panel active" role="tabpanel" id="docs-panel-online" data-docs-panel="online" aria-labelledby="docs-tab-online">
+                <h3>Official GitHub Pages</h3>
+                <p>Open the hosted build (same app, no install):</p>
+                <p><a class="tbm-docs-cta" href="https://tuhumar.github.io/theblockmaster/" target="_blank" rel="noopener">https://tuhumar.github.io/theblockmaster/</a></p>
+                <p>Deep links work the same as local, e.g. <code>#lab/simple</code>, <code>#bip39</code>, <code>#docs</code>.</p>
+                <p>Source: <a href="https://github.com/tuhumar/theblockmaster" target="_blank" rel="noopener">github.com/tuhumar/theblockmaster</a>.</p>
+                <ul>
+                  <li>Works on phone or desktop — just open the URL.</li>
+                  <li>Private keys still never leave the tab.</li>
+                  <li>For agent automation, prefer <strong>Run local</strong> so CDP/Playwright can hit <code>127.0.0.1</code>.</li>
+                </ul>
+              </div>
+
+              <div class="tbm-docs-panel" role="tabpanel" id="docs-panel-local" data-docs-panel="local" aria-labelledby="docs-tab-local" hidden>
+                <h3>Clone &amp; serve</h3>
+                <pre class="tbm-docs-pre">git clone https://github.com/tuhumar/theblockmaster.git
+cd theblockmaster
+python3 -m http.server 8770 --bind 127.0.0.1</pre>
+                <p>Open <code>http://127.0.0.1:8770/</code>. ES modules require HTTP (not <code>file://</code>).</p>
+                <p>Any static server works (<code>npx serve</code>, Caddy, nginx). Default lab port in this project is <strong>8770</strong>.</p>
+                <h3>Hash routes</h3>
+                <p><code>#home</code> · <code>#lab/simple</code> · <code>#lab/btc</code> · <code>#lab/eth</code> · <code>#bip39</code> · <code>#bip32</code> · <code>#brainwallet</code> · <code>#calculators</code> · <code>#xmr</code> · <code>#docs</code>.</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="doc-tabs">
+            <h2>3. Site tabs (quick map)</h2>
+            <table class="tbm-docs-table">
+              <thead><tr><th>Tab</th><th>Hash</th><th>What it does</th></tr></thead>
+              <tbody>
+                <tr><td>Home</td><td><code>#home</code></td><td>Search bar → classify pubkey / priv / address / mnemonic / xprv → open the right lab</td></tr>
+                <tr><td>EQIR Lab</td><td><code>#lab/simple</code> · <code>#lab/btc</code> · <code>#lab/eth</code></td><td>Simple = both chains; Advanced = full secp256k1 modules + derived BTC or ETH/BSC</td></tr>
+                <tr><td>BIP39</td><td><code>#bip39</code></td><td>Generate/validate mnemonic, seed, root xprv, address table</td></tr>
+                <tr><td>BIP32</td><td><code>#bip32</code></td><td>xprv/xpub <em>or passphrase</em> → path / account·index derivation</td></tr>
+                <tr><td>Brainwallet</td><td><code>#brainwallet</code></td><td>Passphrase → SHA-256 / hash256 → WIF + addresses</td></tr>
+                <tr><td>Calculators</td><td><code>#calculators</code></td><td>SHA-256, HASH256, RIPEMD-160, HASH160, Keccak, Base58, hex/XOR, BigInt</td></tr>
+                <tr><td>XMR</td><td><code>#xmr</code></td><td>Monero spend/view, address, ed25519 scalar D&amp;A, kangaroo/XOR</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="doc-eqir">
+            <h2>4. EQIR Lab (BTC · ETH/BSC)</h2>
+            <h3>Simple · Advanced</h3>
+            <p><strong>Simple</strong> (<code>#lab/simple</code>) shows private → public keys plus <strong>BTC and ETH/BSC addresses together</strong> — no chain split, no research modules or sidebars. <strong>Advanced</strong> (<code>#lab/btc</code> / <code>#lab/eth</code>) is the full lab with Double-and-Add, STATE, and modules.</p>
+            <h3>Chain subtabs</h3>
+            <p><strong>BTC</strong> shows WIF, hash160, P2PKH / P2SH-P2WPKH / P2WPKH / Taproot. <strong>ETH / BSC</strong> shows the same secp256k1 key as <code>0x</code> with etherscan / bscscan explorers. Shared pubkey panel is always visible.</p>
+            <h3>Modules</h3>
+            <ul>
+              <li><strong>Curve</strong> — secp256k1 SPEC fields.</li>
+              <li><strong>Scalar</strong> — private → public + full Double-and-Add chain (MSB-first).</li>
+              <li><strong>Reverse</strong> — public seed + ↑ Half / Half(R−G) when indices known (not an ECDLP solver).</li>
+              <li><strong>Kangaroo</strong> — Pollard lambda sandbox (small bits in-browser).</li>
+              <li><strong>XOR</strong> — reversible scalar/bit transforms + fingerprint cloud.</li>
+              <li><strong>QI Walk</strong> — classical amplitude simulation over kangaroo jumps (no quantum speedup claim).</li>
+              <li><strong>Compare</strong> — side-by-side trajectory metrics.</li>
+              <li><strong>⧉ STATE</strong> — export shared STATE JSON from the current chain.</li>
+            </ul>
+            <h3>Input &amp; chain</h3>
+            <p>Enter private hex or public (02/03/04). <strong>Priv → Pub + chain</strong> builds the operation list. <strong>seq pub → pk</strong> accepts contiguous 2P / 2P+G steps. <strong>build #1–70+#75</strong> loads the Δ·G puzzle path when the JSON asset is present.</p>
+            <h3>Sidebars</h3>
+            <p>Left: relations (collisions/repeats) + private-key history (localStorage). Right: pins + Base58/SHA/RIPEMD/calc/hex tools accordion.</p>
+          </section>
+
+          <section id="doc-hd">
+            <h2>5. BIP39 &amp; BIP32</h2>
+            <h3>BIP39</h3>
+            <p>Generate 12–24 English words, optional BIP39 passphrase, PBKDF2 seed, BIP32 root xprv/xpub, path presets (BIP44/49/84/ETH), address table with → EQIR.</p>
+            <p>Footer credit: <a href="https://iancoleman.io/" target="_blank" rel="noopener">IanColeman</a> (MIT lineage).</p>
+            <h3>BIP32</h3>
+            <p><strong>Root source</strong>:</p>
+            <ul>
+              <li><strong>Extended key</strong> — paste xprv/xpub.</li>
+              <li><strong>Passphrase</strong> — SHA-256 × rounds (default 50k, bip32.org-style) or PBKDF2-HMAC-SHA512 → master seed/xprv, then derive.</li>
+            </ul>
+            <p>Derivation mode: custom path <em>or</em> account (k) + index (i) as <code>m/k'/0/i</code>. Send child keys to EQIR BTC or ETH/BSC.</p>
+          </section>
+
+          <section id="doc-tools">
+            <h2>6. Brainwallet &amp; Calculators</h2>
+            <p><strong>Brainwallet</strong> hashes a passphrase (SHA-256 or hash256) into a secp256k1 private key and shows WIF / BTC / ETH. Unsafe for real funds — lab only.</p>
+            <p><strong>Calculators</strong> expose the same primitives as the EQIR tools sidebar in a full-page layout: hashes, Base58(check), hex↔utf8/XOR, hex↔decimal (incl. 32-byte pad), BigInt + / − / × / ÷ / mod / pow / inv / gcd.</p>
+          </section>
+
+          <section id="doc-xmr">
+            <h2>7. XMR EQIR Lab</h2>
+            <p>Monero uses <strong>ed25519</strong> (via noble-ed25519, MIT). Modules:</p>
+            <ul>
+              <li><strong>Keys</strong> — random/paste spend → <code>view = sc_reduce32(Keccak(spend))</code> → pubs → standard address (main/stage/test).</li>
+              <li><strong>Scalar</strong> — MSB-first Double-and-Add trace on ed25519.</li>
+              <li><strong>Curve</strong> — ed25519 parameters.</li>
+              <li><strong>Address</strong> — decode / checksum / re-encode Monero base58 blocks.</li>
+              <li><strong>Kangaroo / XOR</strong> — small-bit educational sandboxes.</li>
+            </ul>
+          </section>
+
+          <section id="doc-state">
+            <h2>8. Shared STATE (EQIR contract)</h2>
+            <p>EQIR modules share a STATE object per chain step:</p>
+            <pre class="tbm-docs-pre">STATE
+ ├── Point X / Y / compressed
+ ├── Scalar / bits / bitIndex
+ ├── Previous operation
+ ├── Double count / Add count
+ ├── XOR trail[]
+ ├── Kangaroo { a, b, herd, dist, jumpIdx }
+ └── fingerprint (sha256 prefix)</pre>
+            <p>Use <strong>⧉ STATE</strong> in EQIR to download <code>eqir-states.json</code>. The preview panel shows a live slice of the same JSON.</p>
+            <p>App-level shared snapshot for agents is published to <code>localStorage["tbm-shared-state"]</code> and <code>window.TheBlockMaster</code> (see next section).</p>
+          </section>
+
+          <section id="doc-agents">
+            <h2>9. Connect an AI agent (shared STATE + agent browsers)</h2>
+            <p>TheBlockMaster exposes a first-class bridge so Cursor Agent, Playwright, Chrome DevTools, or any agent browser can read/write lab state without a server.</p>
+
+            <h3>9.1 Global API</h3>
+            <p>In the page console or via <code>Runtime.evaluate</code> / agent browser JS:</p>
+            <pre class="tbm-docs-pre">// snapshot (includes secrets by default — treat as sensitive)
+TheBlockMaster.getSnapshot()
+TheBlockMaster.getSnapshot({ includeSecrets: false })
+
+// publish to localStorage + BroadcastChannel + events
+TheBlockMaster.publish()
+
+// navigate + fill
+TheBlockMaster.goto('lab', { chain: 'btc' })
+TheBlockMaster.setPriv('1')
+TheBlockMaster.setPub('02…')
+TheBlockMaster.applySnapshot({
+  page: 'bip39',
+  inputs: { bip39Phrase: 'abandon abandon … about' }
+})
+
+// subscribe
+TheBlockMaster.subscribe((snap) => console.log(snap.page, snap.derived))</pre>
+            <p>Aliases: <code>window.__tbmAgent</code> === <code>window.TheBlockMaster</code>.</p>
+
+            <h3>9.2 Persistence channels</h3>
+            <table class="tbm-docs-table">
+              <thead><tr><th>Channel</th><th>Key / name</th><th>Use</th></tr></thead>
+              <tbody>
+                <tr><td>localStorage</td><td><code>tbm-shared-state</code></td><td>Durable snapshot for same-origin agent scripts</td></tr>
+                <tr><td>BroadcastChannel</td><td><code>tbm-shared-state</code></td><td>Multi-tab / multi-frame sync</td></tr>
+                <tr><td>CustomEvent</td><td><code>tbm:state</code></td><td>In-page listeners</td></tr>
+                <tr><td>postMessage</td><td><code>{ source:'theblockmaster' }</code></td><td>iframes / extension / parent agents</td></tr>
+              </tbody>
+            </table>
+
+            <h3>9.3 postMessage protocol (iframe / extension)</h3>
+            <pre class="tbm-docs-pre">// Agent → TheBlockMaster
+iframe.contentWindow.postMessage({
+  target: 'theblockmaster',
+  type: 'getSnapshot',
+  includeSecrets: true,
+  id: '1'
+}, '*')
+
+iframe.contentWindow.postMessage({
+  target: 'theblockmaster',
+  type: 'applySnapshot',
+  id: '2',
+  snapshot: { page: 'xmr', inputs: { xmrSpend: '…' } }
+}, '*')
+
+iframe.contentWindow.postMessage({
+  target: 'theblockmaster',
+  type: 'goto',
+  page: 'calculators'
+}, '*')
+
+// TheBlockMaster → Agent
+// { source:'theblockmaster', type:'snapshot'|'applied', id, snapshot }</pre>
+
+            <h3>9.4 Agent browser playbook (Cursor / CDP / Playwright)</h3>
+            <ol>
+              <li>Start the static server on <code>:8770</code>.</li>
+              <li>Open or navigate the agent browser to <code>http://127.0.0.1:8770/#lab/btc</code>.</li>
+              <li>Evaluate <code>TheBlockMaster.getSnapshot()</code> to read page, chain, inputs, derived addresses, STATE preview.</li>
+              <li>To drive the lab: <code>TheBlockMaster.applySnapshot({…})</code> or fill DOM fields (<code>#priv</code>, <code>#pub</code>, <code>#bip39-phrase</code>, <code>#xmr-spend</code>, …) then click the existing buttons.</li>
+              <li>Prefer hash routes for deep links (<code>#bip32</code>, <code>#xmr</code>) so the agent can bookmark steps.</li>
+              <li>For multi-step research, call <code>TheBlockMaster.publish()</code> after each action so <code>localStorage['tbm-shared-state']</code> stays current for other agent turns.</li>
+            </ol>
+            <pre class="tbm-docs-pre">// Playwright example
+await page.goto('http://127.0.0.1:8770/#lab/btc')
+await page.waitForFunction(() => window.TheBlockMaster)
+await page.evaluate(() => TheBlockMaster.setPriv('1'))
+await page.click('#btn-fwd')
+const snap = await page.evaluate(() => TheBlockMaster.publish())
+console.log(snap.derived)</pre>
+
+            <h3>9.5 Suggested agent workflow</h3>
+            <ol>
+              <li><strong>Orient</strong> — <code>getSnapshot()</code> or open <code>#docs</code>.</li>
+              <li><strong>Choose surface</strong> — EQIR for secp256k1 trails, BIP39/32 for HD, XMR for Monero, Calculators for hashes.</li>
+              <li><strong>Write inputs</strong> via API or DOM; never exfiltrate secrets to remote tools unless the user asked.</li>
+              <li><strong>Run UI actions</strong> (Priv→Pub, Derive, Decode) the same way a human would.</li>
+              <li><strong>Read STATE</strong> — export JSON, preview panel, or <code>publish()</code> snapshot for the next agent step.</li>
+            </ol>
+          </section>
+
+          <section id="doc-hosting">
+            <h2>10. GitHub Pages (official host)</h2>
+            <p>The official online build is static hosting from
+              <a href="https://github.com/tuhumar/theblockmaster" target="_blank" rel="noopener">github.com/tuhumar/theblockmaster</a>
+              → <a href="https://tuhumar.github.io/theblockmaster/" target="_blank" rel="noopener">tuhumar.github.io/theblockmaster</a>.</p>
+            <ol>
+              <li>Repo → <strong>Settings → Pages</strong></li>
+              <li>Source: <strong>Deploy from a branch</strong></li>
+              <li>Branch: <code>main</code> · folder: <strong>/ (root)</strong></li>
+              <li>Keep <code>.nojekyll</code> at the repo root so GitHub does not strip assets</li>
+            </ol>
+            <p>License of this project: <strong>GPL-3.0</strong> (<code>LICENSE</code>).</p>
+          </section>
+
+          <section id="doc-security">
+            <h2>11. Security &amp; limits</h2>
+            <ul>
+              <li>All crypto is <strong>local</strong>. Balance lookups (EQIR derived panel) are the only optional network calls.</li>
+              <li>Brainwallet / BIP32 passphrase modes are <strong>educational</strong> — low entropy is crackable.</li>
+              <li>Kangaroo / QI modules are sandboxes for small bit widths, not puzzle solvers.</li>
+              <li>Agent snapshots may contain private keys. Use <code>includeSecrets: false</code> when sharing logs.</li>
+              <li>TheBlockMaster itself is <strong>GPL-3.0</strong> — see <code>LICENSE</code> in the repo. Third-party dependencies keep their own notices (Ian Coleman lineage MIT, noble-ed25519 MIT, bip32.org public-domain lineage) in UI footers.</li>
+            </ul>
+            <div class="tbm-home-cta">
+              <button type="button" class="primary" data-goto="lab" data-goto-chain="btc">Open EQIR · BTC</button>
+              <button type="button" class="ghost" data-goto="xmr">Open XMR</button>
+              <button type="button" class="ghost" data-goto="home">Home</button>
+            </div>
+          </section>
+        </article>
+      </div>
+    </main>
+
+    <main class="tbm-page tbm-page-lab active" data-page="lab" id="page-lab">
+  <div class="shell">
+  <aside class="sidebar sidebar-left eqir-adv" id="sidebar-left" aria-label="Relations and history">
+    <div class="sb-half sb-half-top">
+      <div class="sb-head">
+        <h2>Relations</h2>
+        <button type="button" class="ghost sm" id="btn-rel-refresh" title="re-analyze">↻</button>
+      </div>
+      <p class="sb-hint">collisions · repeats · pins ↔ chain</p>
+      <div id="relations-list" class="sb-list"></div>
+    </div>
+    <div class="sb-half sb-half-bottom">
+      <div class="sb-head">
+        <h2>History</h2>
+        <button type="button" class="ghost sm" id="btn-hist-clear" title="clear history">clear</button>
+      </div>
+      <p class="sb-hint">private keys · 10/page · localStorage</p>
+      <div id="history-list" class="sb-list"></div>
+      <div class="hist-pager">
+        <button type="button" class="ghost sm" id="btn-hist-prev" title="previous page">‹</button>
+        <span class="hist-page" id="hist-page-label">1 / 1</span>
+        <button type="button" class="ghost sm" id="btn-hist-next" title="next page">›</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="wrap">
+    <header class="top eqir-lab-header" id="eqir-lab-chrome">
+      <h1 title="EQIR Lab · 100% local">EQIR Lab</h1>
+      <p id="eqir-lab-lead" class="visually-hidden" hidden>
+        Shared STATE engine · Double-and-Add · Kangaroo · XOR · QI · Comparator · 100% local.
+      </p>
+      <nav class="eqir-mode-nav" id="eqir-mode-nav" aria-label="EQIR complexity mode">
+        <button type="button" data-eqir-mode="simple" title="Private → public keys + addresses only">Simple</button>
+        <button type="button" class="active" data-eqir-mode="advanced" title="Full lab · STATE · curve · chain">Advanced</button>
+      </nav>
+      <nav class="eqir-chain-nav" id="eqir-chain-nav" aria-label="EQIR chain family">
+        <button type="button" class="active" data-chain="btc" title="Bitcoin · WIF · P2PKH/P2WPKH/Taproot">BTC</button>
+        <button type="button" data-chain="evm" title="Ethereum + BNB Smart Chain · same secp256k1 key">ETH / BSC</button>
+      </nav>
+      <nav class="eqir-mod-nav eqir-adv" id="eqir-mod-nav" aria-label="EQIR modules">
+        <button type="button" class="ghost sm active" data-mod="curve">Curve</button>
+        <button type="button" class="ghost sm" data-mod="scalar">Scalar</button>
+        <button type="button" class="ghost sm" data-mod="reverse">Reverse</button>
+        <button type="button" class="ghost sm" data-mod="kangaroo">Kangaroo</button>
+        <button type="button" class="ghost sm" data-mod="xor">XOR</button>
+        <button type="button" class="ghost sm" data-mod="qi">QI Walk</button>
+        <button type="button" class="ghost sm" data-mod="compare">Compare</button>
+        <button type="button" class="ghost sm" id="btn-export-states" title="export STATE JSON">⧉ STATE</button>
+      </nav>
+      <p class="muted eqir-chain-hint" id="eqir-chain-hint" hidden></p>
+      <p class="muted eqir-mod-hint eqir-adv" id="eqir-mod-hint" hidden></p>
+    </header>
+
+    <div id="panel-kangaroo" class="eqir-panel card eqir-adv" hidden>
+      <h2>Kangaroo Lab</h2>
+      <p class="muted">Pollard lambda · tame/wild · trail in STATE. Selftest bits≤20 in the browser.</p>
+      <div class="grid2">
+        <div class="field"><label>bits (selftest)</label><input id="kang-bits" type="text" value="14" /></div>
+        <div class="field"><label>k hex (hunt)</label><input id="kang-k" type="text" spellcheck="false" placeholder="e.g. 3f1a" /></div>
+        <div class="field"><label>lo hex</label><input id="kang-lo" type="text" spellcheck="false" value="2000" /></div>
+        <div class="field"><label>hi hex</label><input id="kang-hi" type="text" spellcheck="false" value="3fff" /></div>
+      </div>
+      <div class="actions">
+        <button type="button" id="btn-kang-selftest">Selftest</button>
+        <button type="button" class="ghost" id="btn-kang-run">Hunt k</button>
+      </div>
+      <pre id="kang-out" class="tool-out"></pre>
+      <div id="kang-trail" class="eqir-trail"></div>
+    </div>
+
+    <div id="panel-xor" class="eqir-panel card eqir-adv" hidden>
+      <h2>XOR Lab</h2>
+      <p class="muted">Reversible transforms · fingerprint cloud over the Scalar chain.</p>
+      <div class="grid2">
+        <div class="field"><label>a (hex/dec)</label><input id="xor-a" type="text" spellcheck="false" placeholder="a" /></div>
+        <div class="field"><label>mask</label><input id="xor-m" type="text" spellcheck="false" value="a5a5" /></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>bits</label><input id="xor-bits" type="text" spellcheck="false" placeholder="1011001…" /></div>
+        <div class="field"><label>bit mask</label><input id="xor-bitmask" type="text" spellcheck="false" value="10" /></div>
+      </div>
+      <div class="actions">
+        <button type="button" id="btn-xor-run">a ⊕ mask</button>
+        <button type="button" class="ghost" id="btn-xor-bits">bits ⊕</button>
+        <button type="button" class="ghost" id="btn-xor-ham">hamming</button>
+        <button type="button" class="ghost" id="btn-xor-cloud">cloud ← chain</button>
+      </div>
+      <pre id="xor-out" class="tool-out"></pre>
+    </div>
+
+    <div id="panel-qi" class="eqir-panel card eqir-adv" hidden>
+      <h2>Quantum-Inspired Walk</h2>
+      <p class="muted">Classical amplitudes over Kangaroo jumps — no quantum-speedup claim.</p>
+      <div class="grid2">
+        <div class="field"><label>steps</label><input id="qi-steps" type="text" value="32" /></div>
+        <div class="field"><label>width bits</label><input id="qi-bits" type="text" value="14" /></div>
+      </div>
+      <div class="actions">
+        <button type="button" id="btn-qi-run">Walk</button>
+        <button type="button" class="ghost" id="btn-qi-vs">QI vs deterministic</button>
+      </div>
+      <pre id="qi-out" class="tool-out"></pre>
+      <div id="qi-trail" class="eqir-trail"></div>
+    </div>
+
+    <div id="panel-compare" class="eqir-panel card eqir-adv" hidden>
+      <h2>Trajectory Comparator</h2>
+      <p class="muted">classic · adaptive · xor-dp · qi-hybrid · experimental on the same interval.</p>
+      <div class="grid2">
+        <div class="field"><label>bits (10–16)</label><input id="cmp-bits" type="text" value="12" /></div>
+        <div class="field"><label>xor mask</label><input id="cmp-mask" type="text" value="a5a5" /></div>
+      </div>
+      <div class="actions">
+        <button type="button" id="btn-compare-run">Compare</button>
+      </div>
+      <div id="cmp-cards" class="eqir-cmp-grid"></div>
+      <pre id="cmp-out" class="tool-out"></pre>
+    </div>
+
+    <div id="panel-scalar" class="eqir-panel">
+    <section class="card eqir-adv" id="eqir-state-card" hidden>
+      <h2>Shared STATE · preview</h2>
+      <pre id="eqir-states-preview" class="tool-out mono" style="max-height:8rem"></pre>
+    </section>
+    <section class="card" id="eqir-input-card">
+      <h2>Input</h2>
+      <div class="grid2 input-keys">
+        <div class="field">
+          <label>Private key (HEX)</label>
+          <div class="with-copy">
+            <input id="priv" type="text" spellcheck="false"
+              placeholder="e.g. 1  or  6d9392a16883f90903d5f78da57af07eb2" value="1" />
+            <button type="button" class="ghost sm eqir-adv" id="btn-pin-priv" title="Pin private">📌</button>
+            <button type="button" class="ghost sm copy-btn" data-copy="priv" title="Copy">⧉</button>
+          </div>
+        </div>
+        <div class="field eqir-adv">
+          <label>Public key (02/03… or 04…)</label>
+          <div class="with-copy">
+            <input id="pub" type="text" spellcheck="false" placeholder="02… / 03… / 04…" />
+            <button type="button" class="ghost sm" id="btn-pin-pub" title="Pin public">📌</button>
+            <button type="button" class="ghost sm copy-btn" data-copy="pub" title="Copy">⧉</button>
+          </div>
+        </div>
+      </div>
+      <div class="grid2 eqir-adv">
+        <div class="field">
+          <label>Max bit (bitlen − 1)</label>
+          <input id="maxbit" type="text" value="0" />
+        </div>
+        <div class="field">
+          <label>ADD indices (bits = 1), comma-separated</label>
+          <div class="with-copy">
+            <input id="indices" type="text" placeholder="e.g. 0  or  1,4,5,7,…" />
+            <button type="button" class="ghost sm copy-btn" data-copy="indices" title="Copy">⧉</button>
+          </div>
+        </div>
+      </div>
+      <div class="input-tools" title="step ± · random · range · derive">
+        <div class="priv-nudge" title="Add/subtract step from private (mod n, stays in 1..n−1)">
+          <button type="button" id="btn-priv-minus" class="ghost sm" aria-label="minus">−</button>
+          <input id="priv-step" type="text" spellcheck="false" value="1"
+            placeholder="step" title="step (dec / 0x)" />
+          <button type="button" id="btn-priv-plus" class="ghost sm" aria-label="plus">+</button>
+        </div>
+        <div class="priv-rand" title="Random private in [1,n−1] or [lo,hi] · HEX bounds (dec:N for decimal)">
+          <button type="button" id="btn-priv-rand" class="ghost sm" title="Random private in [1, n−1]">🎲</button>
+          <input id="priv-lo" type="text" spellcheck="false" placeholder="lo" title="Lower HEX bound (dec:N for decimal)" />
+          <span class="hint">…</span>
+          <input id="priv-hi" type="text" spellcheck="false" placeholder="hi" title="Upper HEX bound (dec:N for decimal)" />
+          <button type="button" id="btn-priv-rand-range" class="ghost sm" title="Random in [lo, hi] ∩ [1, n−1]">🎲 range</button>
+        </div>
+        <button id="btn-fwd" type="button" class="input-derive"
+          data-label-simple="Derive" data-label-advanced="Priv → Pub + chain">Priv → Pub + chain</button>
+        <button id="btn-rev-init" class="ghost sm eqir-adv" type="button">Pub → seed</button>
+        <button id="btn-apply-idx" class="ghost sm eqir-adv" type="button">Apply ↑</button>
+        <button id="btn-undo" class="ghost sm eqir-adv" type="button">↩ undo</button>
+        <button id="btn-clear" class="ghost sm eqir-adv" type="button">Clear</button>
+        <button id="btn-export" class="ghost sm eqir-adv" type="button">Export</button>
+      </div>
+      <div class="actions seq-pub-bar eqir-adv" title="Paste pubkeys in sequence (always the next). Each 2P or 2P+G step fills bits → private.">
+        <button type="button" class="ghost" id="btn-seq-pub" aria-pressed="false">seq pub → pk OFF</button>
+        <button type="button" class="ghost sm" id="btn-seq-inf" title="Start from infinity (baseK=0)">∞ start</button>
+        <button type="button" class="ghost sm" id="btn-seq-commit" title="Commit current pubkey as next step">↵ next pub</button>
+        <button type="button" class="ghost sm" id="btn-seq-undo" title="Undo last seq step">↩ seq</button>
+        <button type="button" class="ghost sm" id="btn-seq-puzzles-70" title="Build EC path #1–#70+#75 (skip #71–#74 without pubkey)">build #1–70+#75</button>
+        <span class="hint" id="seq-pub-status">seq mode OFF</span>
+      </div>
+      <div class="actions eqir-adv">
+        <button id="demo1" class="ghost sm" type="button">demo k=1</button>
+        <button id="demo135" class="ghost sm" type="button">demo #135</button>
+        <button id="demoRev1" class="ghost sm" type="button">demo reverse Q=G</button>
+        <button id="btn-add-row" class="ghost sm" type="button">+ empty row</button>
+      </div>
+      <div id="flash"></div>
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <section class="card" id="derived-panel">
+      <h2>
+        <span id="derived-title">Derived · BTC</span>
+        <span class="muted" id="derived-status">(no private)</span>
+        <button type="button" class="ghost sm" id="btn-bal-refresh" title="fetch online and refresh cache">⟳ online</button>
+        <span class="muted" id="bal-status"></span>
+      </h2>
+      <div id="bal-cache-notice" class="bal-cache-notice" hidden>
+        <span id="bal-cache-msg">local cache data</span>
+        <button type="button" class="ghost sm" id="btn-bal-force" title="bypass cache and hit APIs">refresh online</button>
+      </div>
+      <div id="fund-leak-alert" class="fund-leak-alert" hidden role="alert" aria-live="assertive"></div>
+
+      <div class="der-wif-row der-shared">
+        <div class="der-row">
+          <span class="der-k">WIF u</span>
+          <div class="with-copy">
+            <textarea id="der-wif-u" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+            <button type="button" class="ghost sm copy-btn" data-copy="der-wif-u">⧉</button>
+          </div>
+        </div>
+        <div class="der-row">
+          <span class="der-k">WIF c</span>
+          <div class="with-copy">
+            <textarea id="der-wif-c" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+            <button type="button" class="ghost sm copy-btn" data-copy="der-wif-c">⧉</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="der-cols der-shared">
+        <div class="der-col der-col-u">
+          <div class="der-col-h">Uncompressed</div>
+          <div class="der-row">
+            <span class="der-k">1 · Pubkey</span>
+            <div class="with-copy">
+              <textarea id="der-pub-u" class="der-full mono" rows="2" spellcheck="false" readonly></textarea>
+              <button type="button" class="ghost sm copy-btn" data-copy="der-pub-u">⧉</button>
+            </div>
+          </div>
+          <div class="der-row">
+            <span class="der-k">2 · hash160</span>
+            <div class="with-copy">
+              <textarea id="der-h160-u" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+              <button type="button" class="ghost sm copy-btn" data-copy="der-h160-u">⧉</button>
+            </div>
+          </div>
+          <div class="der-row der-addr">
+            <span class="der-k">3 · P2PKH</span>
+            <div class="with-copy with-exp">
+              <textarea id="der-btc-p2pkh-u" class="der-full mono der-hl-u" rows="1" spellcheck="false" readonly></textarea>
+              <span class="bal-badges" id="bal-btc-p2pkh-u" title="balance / tx in / tx out"></span>
+              <a class="exp-link ghost sm" id="exp-btc-p2pkh-u" href="#" target="_blank" rel="noopener" title="mempool.space">↗</a>
+              <button type="button" class="ghost sm copy-btn" data-copy="der-btc-p2pkh-u">⧉</button>
+            </div>
+          </div>
+        </div>
+        <div class="der-col der-col-c">
+          <div class="der-col-h">Compressed</div>
+          <div class="der-row">
+            <span class="der-k">1 · Pubkey</span>
+            <div class="with-copy">
+              <textarea id="der-pub-c" class="der-full mono" rows="2" spellcheck="false" readonly></textarea>
+              <button type="button" class="ghost sm copy-btn" data-copy="der-pub-c">⧉</button>
+            </div>
+          </div>
+          <div class="der-row">
+            <span class="der-k">2 · hash160</span>
+            <div class="with-copy">
+              <textarea id="der-h160-c" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+              <button type="button" class="ghost sm copy-btn" data-copy="der-h160-c">⧉</button>
+            </div>
+          </div>
+          <div class="der-row der-addr">
+            <span class="der-k">3 · P2PKH</span>
+            <div class="with-copy with-exp">
+              <textarea id="der-btc-p2pkh-c" class="der-full mono der-hl-c" rows="1" spellcheck="false" readonly></textarea>
+              <span class="bal-badges" id="bal-btc-p2pkh-c" title="balance / tx in / tx out"></span>
+              <a class="exp-link ghost sm" id="exp-btc-p2pkh-c" href="#" target="_blank" rel="noopener" title="mempool.space">↗</a>
+              <button type="button" class="ghost sm copy-btn" data-copy="der-btc-p2pkh-c">⧉</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="der-chain-pane" data-chain-pane="btc" id="der-pane-btc">
+        <div class="der-more">
+          <div class="der-row">
+            <span class="der-k">P2SH</span>
+            <div class="with-copy with-exp">
+              <textarea id="der-btc-p2sh" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+              <span class="bal-badges" id="bal-btc-p2sh" title="balance / tx in / tx out"></span>
+              <a class="exp-link ghost sm" id="exp-btc-p2sh" href="#" target="_blank" rel="noopener" title="mempool.space">↗</a>
+              <button type="button" class="ghost sm copy-btn" data-copy="der-btc-p2sh">⧉</button>
+            </div>
+          </div>
+          <div class="der-row">
+            <span class="der-k">P2WPKH</span>
+            <div class="with-copy with-exp">
+              <textarea id="der-btc-p2wpkh" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+              <span class="bal-badges" id="bal-btc-p2wpkh" title="balance / tx in / tx out"></span>
+              <a class="exp-link ghost sm" id="exp-btc-p2wpkh" href="#" target="_blank" rel="noopener" title="mempool.space">↗</a>
+              <button type="button" class="ghost sm copy-btn" data-copy="der-btc-p2wpkh">⧉</button>
+            </div>
+          </div>
+          <div class="der-row">
+            <span class="der-k">P2TR</span>
+            <div class="with-copy with-exp">
+              <textarea id="der-btc-p2tr" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+              <span class="bal-badges" id="bal-btc-p2tr" title="balance / tx in / tx out"></span>
+              <a class="exp-link ghost sm" id="exp-btc-p2tr" href="#" target="_blank" rel="noopener" title="mempool.space">↗</a>
+              <button type="button" class="ghost sm copy-btn" data-copy="der-btc-p2tr">⧉</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="der-chain-pane" data-chain-pane="evm" id="der-pane-evm" hidden>
+        <div class="der-sep" role="separator" aria-label="ETH BSC">
+          <span>ETH · BSC · same 0x</span>
+        </div>
+        <div class="der-more">
+          <div class="der-row">
+            <span class="der-k">ETH</span>
+            <div class="with-copy with-exp">
+              <textarea id="der-eth" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+              <span class="bal-badges" id="bal-eth" title="balance / tx in / tx out"></span>
+              <a class="exp-link ghost sm" id="exp-eth" href="#" target="_blank" rel="noopener" title="etherscan.io">↗</a>
+              <button type="button" class="ghost sm copy-btn" data-copy="der-eth">⧉</button>
+            </div>
+          </div>
+          <div class="der-row">
+            <span class="der-k">BNB</span>
+            <div class="with-copy with-exp">
+              <textarea id="der-bnb" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+              <span class="bal-badges" id="bal-bnb" title="balance / tx in / tx out"></span>
+              <a class="exp-link ghost sm" id="exp-bnb" href="#" target="_blank" rel="noopener" title="bscscan.com">↗</a>
+              <button type="button" class="ghost sm copy-btn" data-copy="der-bnb">⧉</button>
+            </div>
+          </div>
+        </div>
+        <p class="muted der-evm-note">Same secp256k1 key → same 0x address; balances differ per chain.</p>
+      </div>
+    </section>
+
+    <section class="card eqir-adv" id="spec-panel">
+      <h2>Algorithm · scalar k · curve</h2>
+      <div class="grid2">
+        <div class="field">
+          <label>algorithm · name</label>
+          <div class="with-copy">
+            <input id="spec-algo-name" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-algo-name">⧉</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>direction</label>
+          <div class="with-copy">
+            <input id="spec-algo-dir" type="text" spellcheck="false" placeholder="forward | reverse" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-algo-dir">⧉</button>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>rule (pseudocode)</label>
+        <div class="with-copy">
+          <textarea id="spec-algo-rule" rows="5" spellcheck="false"></textarea>
+          <button type="button" class="ghost sm copy-btn" data-copy="spec-algo-rule">⧉</button>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>why Double / Half(bit=0)</label>
+          <div class="with-copy">
+            <input id="spec-algo-why-d" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-algo-why-d">⧉</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>why Add / Half(R−G)</label>
+          <div class="with-copy">
+            <input id="spec-algo-why-a" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-algo-why-a">⧉</button>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sub">Scalar k</h2>
+      <div class="grid4">
+        <div class="field">
+          <label>bitlen L</label>
+          <div class="with-copy">
+            <input id="spec-k-bitlen" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-k-bitlen">⧉</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>hamming</label>
+          <div class="with-copy">
+            <input id="spec-k-hamming" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-k-hamming">⧉</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>ADD indices (LSB)</label>
+          <div class="with-copy">
+            <input id="spec-k-indices" type="text" spellcheck="false" placeholder="0,3,5,…" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-k-indices">⧉</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>bin (MSB..LSB)</label>
+          <div class="with-copy">
+            <input id="spec-k-bin" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-k-bin">⧉</button>
+          </div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>k_hex</label>
+          <div class="with-copy">
+            <input id="spec-k-hex" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-k-hex">⧉</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>k_dec</label>
+          <div class="with-copy">
+            <input id="spec-k-dec" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-k-dec">⧉</button>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sub">SPEC secp256k1 curve</h2>
+      <div class="grid4">
+        <div class="field">
+          <label>name</label>
+          <div class="with-copy">
+            <input id="spec-curve-name" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-curve-name">⧉</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>equation</label>
+          <div class="with-copy">
+            <input id="spec-curve-eq" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-curve-eq">⧉</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>a</label>
+          <div class="with-copy">
+            <input id="spec-curve-a" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-curve-a">⧉</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>b</label>
+          <div class="with-copy">
+            <input id="spec-curve-b" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-curve-b">⧉</button>
+          </div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>p</label>
+          <div class="with-copy">
+            <input id="spec-curve-p" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-curve-p">⧉</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>n (order ⟨G⟩)</label>
+          <div class="with-copy">
+            <input id="spec-curve-n" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-curve-n">⧉</button>
+          </div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Gx</label>
+          <div class="with-copy">
+            <input id="spec-curve-gx" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-curve-gx">⧉</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Gy</label>
+          <div class="with-copy">
+            <input id="spec-curve-gy" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-curve-gy">⧉</button>
+          </div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>G compressed</label>
+          <div class="with-copy">
+            <input id="spec-curve-gc" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-curve-gc">⧉</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>engine</label>
+          <div class="with-copy">
+            <input id="spec-motor" type="text" spellcheck="false" />
+            <button type="button" class="ghost sm copy-btn" data-copy="spec-motor">⧉</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid2 status-pair eqir-adv" id="status-before">
+      <section class="card">
+        <h2>Bits / indices · before</h2>
+        <div id="bitrow-top" class="bitrow"></div>
+      </section>
+      <section class="card">
+        <h2>State / detail · before</h2>
+        <pre id="detail-top" class="mono muted detail-box"></pre>
+      </section>
+    </div>
+
+    <section class="card eqir-adv" id="chain-panel">
+      <h2>Chain · Double (×2) · Add (+G) · Half</h2>
+      <p class="muted chain-help">
+        Compact cards · click opens modal with full math · list = legacy expanded view.
+      </p>
+      <div class="chain-toolbar" id="chain-toolbar">
+        <div class="chain-view-tog" role="group" aria-label="view mode">
+          <button type="button" class="ghost sm active" id="btn-chain-cards" data-view="cards">cards</button>
+          <button type="button" class="ghost sm" id="btn-chain-full" data-view="full">list</button>
+        </div>
+        <div class="chain-filter-tog" role="group" aria-label="multiply/add filter">
+          <button type="button" class="ghost sm active" id="btn-filt-all" data-filt="all">all</button>
+          <button type="button" class="ghost sm filt-mul" id="btn-filt-mul" data-filt="mul">×2 only</button>
+          <button type="button" class="ghost sm filt-add" id="btn-filt-add" data-filt="add">+G only</button>
+          <button type="button" class="ghost sm filt-both" id="btn-filt-both" data-filt="both">in both</button>
+        </div>
+        <span class="chain-legend muted">
+          <span class="leg leg-mul">×2 / Half</span>
+          <span class="leg leg-add">+G / Half−G</span>
+          <span class="leg leg-both">point in ×2 and +G</span>
+        </span>
+      </div>
+      <div id="chain" class="chain chain-cards"></div>
+    </section>
+
+
+    <div class="grid2 status-pair eqir-adv" id="status-after">
+      <section class="card">
+        <h2>Bits / indices · after</h2>
+        <div id="bitrow-bot" class="bitrow"></div>
+      </section>
+      <section class="card">
+        <h2>State / detail · after</h2>
+        <pre id="detail-bot" class="mono muted detail-box"></pre>
+      </section>
+    </div>
+
+    <p class="footer-note eqir-adv">
+      ↓ Double / ↓ +G = forward MSB-first. ↑ Half / ↑ Half(R−G) = reverse.
+      Closing at ∞ with all bits reconstructs the private. Pubkey alone without indices = ECDLP.
+    </p>
+    </div><!-- /panel-scalar -->
+  </div>
+
+  <aside class="sidebar sidebar-right eqir-adv" id="sidebar-right" aria-label="Pins and tools">
+    <div class="sb-half sb-half-top sb-pins">
+      <div class="sb-head">
+        <h2>Pins</h2>
+        <span class="sb-hint">📌</span>
+      </div>
+      <div class="pin-quick">
+        <button type="button" class="ghost sm" id="btn-pin-priv-sb">📌 Priv</button>
+        <button type="button" class="ghost sm" id="btn-pin-pub-sb">📌 Pub</button>
+      </div>
+      <div id="pins-list" class="sb-list"></div>
+    </div>
+    <div class="sb-half sb-half-bottom sb-tools">
+      <div class="sb-head">
+        <h2>Tools</h2>
+      </div>
+      <p class="sb-hint">accordion · local BigInt</p>
+      <div id="tools-accordion" class="tools-acc">
+        <button type="button" class="tools-acc-btn" data-acc="b58" aria-expanded="true">Base58</button>
+        <div class="tools-acc-panel" data-acc-panel="b58">
+          <label class="tool-lab">input (hex or base58)</label>
+          <textarea id="tool-b58-in" rows="2" spellcheck="false" placeholder="hex or base58…"></textarea>
+          <div class="tool-row">
+            <select id="tool-b58-mode" title="encode input mode">
+              <option value="hex">in hex</option>
+              <option value="utf8">in utf8</option>
+            </select>
+            <label class="tool-check"><input type="checkbox" id="tool-b58-check" /> check</label>
+          </div>
+          <div class="tool-row">
+            <button type="button" class="ghost sm" id="tool-b58-enc">encode →</button>
+            <button type="button" class="ghost sm" id="tool-b58-dec">← decode</button>
+            <button type="button" class="ghost sm" data-copy-out="tool-b58-out" title="copy">⧉</button>
+          </div>
+          <pre id="tool-b58-out" class="tool-out"></pre>
+        </div>
+
+        <button type="button" class="tools-acc-btn" data-acc="sha" aria-expanded="false">SHA-256</button>
+        <div class="tools-acc-panel" data-acc-panel="sha" hidden>
+          <label class="tool-lab">input</label>
+          <textarea id="tool-sha-in" rows="2" spellcheck="false" placeholder="hex or text…"></textarea>
+          <div class="tool-row">
+            <select id="tool-sha-mode">
+              <option value="hex">hex</option>
+              <option value="utf8">utf8</option>
+            </select>
+            <select id="tool-sha-kind">
+              <option value="sha256">sha256</option>
+              <option value="hash256">hash256</option>
+              <option value="keccak">keccak256</option>
+            </select>
+          </div>
+          <div class="tool-row">
+            <button type="button" class="ghost sm" id="tool-sha-run">hash →</button>
+            <button type="button" class="ghost sm" data-copy-out="tool-sha-out">⧉</button>
+          </div>
+          <pre id="tool-sha-out" class="tool-out"></pre>
+        </div>
+
+        <button type="button" class="tools-acc-btn" data-acc="rip" aria-expanded="false">RIPEMD-160</button>
+        <div class="tools-acc-panel" data-acc-panel="rip" hidden>
+          <label class="tool-lab">input</label>
+          <textarea id="tool-rip-in" rows="2" spellcheck="false" placeholder="hex or text…"></textarea>
+          <div class="tool-row">
+            <select id="tool-rip-mode">
+              <option value="hex">hex</option>
+              <option value="utf8">utf8</option>
+            </select>
+            <select id="tool-rip-kind">
+              <option value="ripemd160">ripemd160</option>
+              <option value="hash160">hash160</option>
+            </select>
+          </div>
+          <div class="tool-row">
+            <button type="button" class="ghost sm" id="tool-rip-run">hash →</button>
+            <button type="button" class="ghost sm" data-copy-out="tool-rip-out">⧉</button>
+          </div>
+          <pre id="tool-rip-out" class="tool-out"></pre>
+        </div>
+
+        <button type="button" class="tools-acc-btn" data-acc="calc" aria-expanded="false">Calculator</button>
+        <div class="tools-acc-panel" data-acc-panel="calc" hidden>
+          <label class="tool-lab">a · b (dec or hex)</label>
+          <input id="tool-calc-a" type="text" spellcheck="false" placeholder="a" />
+          <div class="tool-row">
+            <select id="tool-calc-op">
+              <option value="+">+</option>
+              <option value="-">−</option>
+              <option value="*">×</option>
+              <option value="/">÷</option>
+              <option value="%">mod</option>
+              <option value="^">a^b mod m</option>
+              <option value="inv">inv(a) mod b</option>
+              <option value="gcd">gcd</option>
+            </select>
+            <label class="tool-check"><input type="checkbox" id="tool-calc-hex" /> hex out</label>
+          </div>
+          <input id="tool-calc-b" type="text" spellcheck="false" placeholder="b" />
+          <input id="tool-calc-m" type="text" spellcheck="false" placeholder="m (only for a^b mod m)" />
+          <div class="tool-row">
+            <button type="button" class="ghost sm" id="tool-calc-run">compute</button>
+            <button type="button" class="ghost sm" data-copy-out="tool-calc-out">⧉</button>
+          </div>
+          <pre id="tool-calc-out" class="tool-out"></pre>
+        </div>
+
+        <button type="button" class="tools-acc-btn" data-acc="hex" aria-expanded="false">Hex · XOR</button>
+        <div class="tools-acc-panel" data-acc-panel="hex" hidden>
+          <label class="tool-lab">input</label>
+          <textarea id="tool-hex-in" rows="2" spellcheck="false" placeholder="hex or text…"></textarea>
+          <input id="tool-hex-b" type="text" spellcheck="false" placeholder="hex B (XOR)" />
+          <div class="tool-row">
+            <button type="button" class="ghost sm" id="tool-hex-to-utf8">hex→utf8</button>
+            <button type="button" class="ghost sm" id="tool-utf8-to-hex">utf8→hex</button>
+          </div>
+          <div class="tool-row">
+            <button type="button" class="ghost sm" id="tool-hex-rev">reverse</button>
+            <button type="button" class="ghost sm" id="tool-hex-xor">XOR</button>
+            <button type="button" class="ghost sm" data-copy-out="tool-hex-out">⧉</button>
+          </div>
+          <pre id="tool-hex-out" class="tool-out"></pre>
+        </div>
+      </div>
+    </div>
+  </aside>
+  </div>
+    </main><!-- /page-lab -->
+
+  <div id="chain-modal" class="chain-modal" hidden aria-hidden="true">
+    <div class="chain-modal-backdrop" data-act="close-modal"></div>
+    <div class="chain-modal-panel" role="dialog" aria-modal="true" aria-labelledby="chain-modal-title" tabindex="-1">
+      <div class="chain-modal-h">
+        <h3 id="chain-modal-title">Operation</h3>
+        <button type="button" class="ghost sm" data-act="close-modal" title="close">✕</button>
+      </div>
+      <div id="chain-modal-body" class="chain-modal-body"></div>
+    </div>
+  </div>
+  </div><!-- /tbm-site -->
+  <script src="js/site.js?v=tbm23"></script>
+  <script src="js/agent-bridge.js?v=tbm23"></script>
+  <script type="module" src="js/app.js?v=tbm23"></script>
+  <script type="module" src="js/hd/hd-ui.js?v=tbm23"></script>
+  <script type="module" src="js/tools/brainwallet-ui.js?v=tbm23"></script>
+  <script type="module" src="js/tools/calc-ui.js?v=tbm23"></script>
+  <script type="module" src="js/xmr/xmr-ui.js?v=tbm23"></script>
+</body>
+</html>
