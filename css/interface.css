@@ -450,31 +450,33 @@ a.exp-link.disabled {
   background: transparent;
 }
 
-/* Always one full-width column — never clip long WIF / pub / addresses */
-#derived-panel .der-wif-row,
-#derived-panel .der-cols,
-#derived-panel .der-more {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  margin-bottom: 0.45rem;
+#derived-panel .der-wif-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 0.65rem;
+  margin-bottom: 0.4rem;
+}
+#derived-panel .der-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 0.65rem;
+  margin-bottom: 0.4rem;
 }
 #derived-panel .der-col {
   border: 1px solid var(--der-col-border, #c5d8ef);
   border-radius: 4px;
   background: var(--der-col-bg, #fff);
-  padding: 0.45rem 0.55rem 0.5rem;
+  padding: 0.4rem 0.45rem 0.45rem;
   min-width: 0;
-  width: 100%;
 }
 #derived-panel .der-col-h {
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--der-title, #0550ae);
-  margin-bottom: 0.35rem;
-  padding-bottom: 0.2rem;
+  margin-bottom: 0.3rem;
+  padding-bottom: 0.18rem;
   border-bottom: 1px solid var(--der-col-border, #d6e4f5);
 }
 #derived-panel .der-col-c .der-col-h {
@@ -484,23 +486,29 @@ a.exp-link.disabled {
 
 #derived-panel .der-row {
   display: grid;
-  grid-template-columns: 6.2rem minmax(0, 1fr);
-  gap: 0.25rem 0.55rem;
+  grid-template-columns: 5.2rem minmax(0, 1fr);
+  gap: 0.2rem 0.4rem;
   align-items: start;
-  margin-bottom: 0.35rem;
-  width: 100%;
+  margin-bottom: 0.3rem;
+  min-width: 0;
 }
 #derived-panel .der-row:last-child { margin-bottom: 0; }
 #derived-panel .der-k {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   color: var(--muted, #5a6574);
-  line-height: 1.5;
-  padding-top: 0.45rem;
+  line-height: 1.45;
+  padding-top: 0.4rem;
   white-space: nowrap;
 }
-#derived-panel .der-more .der-row {
-  grid-column: auto;
+#derived-panel .der-more {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 0.65rem;
+  margin-bottom: 0.35rem;
+}
+#derived-panel .der-more .der-row:has(#der-btc-p2tr) {
+  grid-column: 1 / -1;
 }
 #derived-panel .der-evm-note {
   font-size: 12.5px;
@@ -547,7 +555,6 @@ a.exp-link.disabled {
   margin-top: 0.1rem;
 }
 
-/* Full value always visible — grow with content, never clip */
 #derived-panel textarea.der-full,
 #derived-panel input.der-full {
   display: block;
@@ -555,33 +562,43 @@ a.exp-link.disabled {
   min-width: 0;
   box-sizing: border-box;
   margin: 0;
-  padding: 0.5rem 0.65rem;
-  min-height: 2.5rem;
+  padding: 0.32rem 0.4rem;
+  min-height: 1.9rem;
   height: auto;
-  max-height: none;
   border: 1px solid var(--der-input-border, #b7cce6);
   border-radius: 4px;
   background: var(--der-input-bg, #fbfcfe);
   color: var(--text, #12161c);
   font-family: var(--mono);
-  font-size: 14.5px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  line-height: 1.45;
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.35;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   word-break: break-all;
   resize: none;
   field-sizing: content;
-  overflow: visible;
+  overflow: visible; /* no scroll — full value wraps in the box */
 }
-/* (address/WIF/pub are textareas — grow to show full value) */
 #derived-panel textarea.der-full:focus,
 #derived-panel input.der-full:focus {
   border-color: var(--accent, #0b6bcb);
   outline: 1px solid color-mix(in srgb, var(--accent, #0b6bcb) 40%, transparent);
 }
-/* Address rows — stronger presence + always full text */
+/* Long pubkeys — ~2 lines, smaller mono, full text */
+#derived-panel #der-pub-u,
+#derived-panel #der-pub-c {
+  font-size: 11px;
+  line-height: 1.35;
+  min-height: 2.9rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+  field-sizing: content;
+  overflow: visible;
+}
+/* Addresses / WIF / hash — slightly smaller, wrap, no scroll */
 #derived-panel .der-addr .der-full,
 #derived-panel .der-more .der-full,
 #derived-panel #der-btc-p2tr,
@@ -590,14 +607,26 @@ a.exp-link.disabled {
 #derived-panel #der-btc-p2pkh-c,
 #derived-panel #der-btc-p2pkh-u,
 #derived-panel #der-eth,
-#derived-panel #der-bnb {
-  font-size: 15px;
-  font-weight: 750;
+#derived-panel #der-bnb,
+#derived-panel #der-wif-u,
+#derived-panel #der-wif-c,
+#derived-panel #der-h160-u,
+#derived-panel #der-h160-c {
+  font-size: 11.5px;
+  font-weight: 700;
   border-width: 1.5px;
   border-color: var(--der-addr-border, #6aa3e0);
   background: var(--der-addr-bg, #eef5ff);
   color: var(--der-addr-fg, #0a2f5c);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--der-addr-border, #6aa3e0) 25%, transparent);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+  field-sizing: content;
+  overflow: visible;
+}
+#derived-panel #der-btc-p2tr {
+  font-size: 11.5px;
 }
 #derived-panel .der-hl-u {
   border-color: var(--der-hl-u-border, #6aa3e0) !important;
@@ -640,7 +669,13 @@ a.exp-link.disabled {
   font-weight: 650;
 }
 
-/* derived panel is always single-column now */
+@media (max-width: 720px) {
+  #derived-panel .der-wif-row,
+  #derived-panel .der-cols,
+  #derived-panel .der-more {
+    grid-template-columns: 1fr;
+  }
+}
 
 .bal-cache-notice {
   display: none;
