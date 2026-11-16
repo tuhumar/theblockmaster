@@ -1,0 +1,29 @@
+{
+  "name": "TheBlockMaster",
+  "short_name": "TBM",
+  "description": "ECC research workspace — EQIR Lab, BIP39/32, calculators, XMR. 100% local.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#12151a",
+  "theme_color": "#12151a",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
