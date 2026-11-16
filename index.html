@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TheBlockMaster — EQIR Lab</title>
   <meta name="description" content="TheBlockMaster — ECC research workspace. EQIR Lab tab: Double-and-Add, Kangaroo, XOR, quantum-inspired walks." />
-  <link rel="stylesheet" href="css/interface.css?v=tbm25" />
-  <link rel="stylesheet" href="css/theblockmaster.css?v=tbm25" />
+  <link rel="stylesheet" href="css/interface.css?v=tbm26" />
+  <link rel="stylesheet" href="css/theblockmaster.css?v=tbm26" />
   <script>
     (function () {
       try {
@@ -1197,7 +1197,7 @@ console.log(snap.derived)</pre>
           <div class="der-row der-addr">
             <span class="der-k">3 · P2PKH</span>
             <div class="with-copy with-exp">
-              <textarea id="der-btc-p2pkh-u" class="der-full mono der-hl-u" rows="1" spellcheck="false" readonly></textarea>
+              <input type="text" id="der-btc-p2pkh-u" class="der-full mono der-hl-u" spellcheck="false" readonly />
               <span class="bal-badges" id="bal-btc-p2pkh-u" title="balance / tx in / tx out"></span>
               <a class="exp-link ghost sm" id="exp-btc-p2pkh-u" href="#" target="_blank" rel="noopener" title="mempool.space">↗</a>
               <button type="button" class="ghost sm copy-btn" data-copy="der-btc-p2pkh-u">⧉</button>
@@ -1223,7 +1223,7 @@ console.log(snap.derived)</pre>
           <div class="der-row der-addr">
             <span class="der-k">3 · P2PKH</span>
             <div class="with-copy with-exp">
-              <textarea id="der-btc-p2pkh-c" class="der-full mono der-hl-c" rows="1" spellcheck="false" readonly></textarea>
+              <input type="text" id="der-btc-p2pkh-c" class="der-full mono der-hl-c" spellcheck="false" readonly />
               <span class="bal-badges" id="bal-btc-p2pkh-c" title="balance / tx in / tx out"></span>
               <a class="exp-link ghost sm" id="exp-btc-p2pkh-c" href="#" target="_blank" rel="noopener" title="mempool.space">↗</a>
               <button type="button" class="ghost sm copy-btn" data-copy="der-btc-p2pkh-c">⧉</button>
@@ -1237,7 +1237,7 @@ console.log(snap.derived)</pre>
           <div class="der-row">
             <span class="der-k">P2SH</span>
             <div class="with-copy with-exp">
-              <textarea id="der-btc-p2sh" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+              <input type="text" id="der-btc-p2sh" class="der-full mono" spellcheck="false" readonly />
               <span class="bal-badges" id="bal-btc-p2sh" title="balance / tx in / tx out"></span>
               <a class="exp-link ghost sm" id="exp-btc-p2sh" href="#" target="_blank" rel="noopener" title="mempool.space">↗</a>
               <button type="button" class="ghost sm copy-btn" data-copy="der-btc-p2sh">⧉</button>
@@ -1246,7 +1246,7 @@ console.log(snap.derived)</pre>
           <div class="der-row">
             <span class="der-k">P2WPKH</span>
             <div class="with-copy with-exp">
-              <textarea id="der-btc-p2wpkh" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+              <input type="text" id="der-btc-p2wpkh" class="der-full mono" spellcheck="false" readonly />
               <span class="bal-badges" id="bal-btc-p2wpkh" title="balance / tx in / tx out"></span>
               <a class="exp-link ghost sm" id="exp-btc-p2wpkh" href="#" target="_blank" rel="noopener" title="mempool.space">↗</a>
               <button type="button" class="ghost sm copy-btn" data-copy="der-btc-p2wpkh">⧉</button>
@@ -1255,7 +1255,7 @@ console.log(snap.derived)</pre>
           <div class="der-row">
             <span class="der-k">P2TR</span>
             <div class="with-copy with-exp">
-              <textarea id="der-btc-p2tr" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+              <input type="text" id="der-btc-p2tr" class="der-full mono" spellcheck="false" readonly />
               <span class="bal-badges" id="bal-btc-p2tr" title="balance / tx in / tx out"></span>
               <a class="exp-link ghost sm" id="exp-btc-p2tr" href="#" target="_blank" rel="noopener" title="mempool.space">↗</a>
               <button type="button" class="ghost sm copy-btn" data-copy="der-btc-p2tr">⧉</button>
@@ -1272,7 +1272,7 @@ console.log(snap.derived)</pre>
           <div class="der-row">
             <span class="der-k">ETH</span>
             <div class="with-copy with-exp">
-              <textarea id="der-eth" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+              <input type="text" id="der-eth" class="der-full mono" spellcheck="false" readonly />
               <span class="bal-badges" id="bal-eth" title="balance / tx in / tx out"></span>
               <a class="exp-link ghost sm" id="exp-eth" href="#" target="_blank" rel="noopener" title="etherscan.io">↗</a>
               <button type="button" class="ghost sm copy-btn" data-copy="der-eth">⧉</button>
@@ -1281,7 +1281,7 @@ console.log(snap.derived)</pre>
           <div class="der-row">
             <span class="der-k">BNB</span>
             <div class="with-copy with-exp">
-              <textarea id="der-bnb" class="der-full mono" rows="1" spellcheck="false" readonly></textarea>
+              <input type="text" id="der-bnb" class="der-full mono" spellcheck="false" readonly />
               <span class="bal-badges" id="bal-bnb" title="balance / tx in / tx out"></span>
               <a class="exp-link ghost sm" id="exp-bnb" href="#" target="_blank" rel="noopener" title="bscscan.com">↗</a>
               <button type="button" class="ghost sm copy-btn" data-copy="der-bnb">⧉</button>
@@ -1657,12 +1657,12 @@ console.log(snap.derived)</pre>
     </div>
   </div>
   </div><!-- /tbm-site -->
-  <script src="js/site.js?v=tbm25"></script>
-  <script src="js/agent-bridge.js?v=tbm25"></script>
-  <script type="module" src="js/app.js?v=tbm25"></script>
-  <script type="module" src="js/hd/hd-ui.js?v=tbm25"></script>
-  <script type="module" src="js/tools/brainwallet-ui.js?v=tbm25"></script>
-  <script type="module" src="js/tools/calc-ui.js?v=tbm25"></script>
-  <script type="module" src="js/xmr/xmr-ui.js?v=tbm25"></script>
+  <script src="js/site.js?v=tbm26"></script>
+  <script src="js/agent-bridge.js?v=tbm26"></script>
+  <script type="module" src="js/app.js?v=tbm26"></script>
+  <script type="module" src="js/hd/hd-ui.js?v=tbm26"></script>
+  <script type="module" src="js/tools/brainwallet-ui.js?v=tbm26"></script>
+  <script type="module" src="js/tools/calc-ui.js?v=tbm26"></script>
+  <script type="module" src="js/xmr/xmr-ui.js?v=tbm26"></script>
 </body>
 </html>
