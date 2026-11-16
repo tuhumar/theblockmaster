@@ -154,6 +154,8 @@ html, body {
     var(--tbm-paper);
   color: var(--tbm-ink);
   font-family: var(--tbm-serif);
+  font-size: 15px;
+  line-height: 1.45;
   transition: background-color 0.25s ease, color 0.2s ease;
 }
 
@@ -168,7 +170,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.85rem 1.25rem;
+  padding: 1rem 1.4rem;
   border-bottom: 1px solid var(--tbm-line);
   background: var(--tbm-topbar);
   position: sticky;
@@ -188,16 +190,16 @@ html, body {
 .tbm-theme-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
   font-family: var(--tbm-mono);
-  font-size: 0.68rem;
+  font-size: 0.82rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   background: transparent;
   color: var(--tbm-ink);
   border: 1px solid var(--tbm-line);
   border-radius: 999px;
-  padding: 0.4rem 0.75rem;
+  padding: 0.5rem 0.9rem;
   cursor: pointer;
 }
 
@@ -226,7 +228,7 @@ html[data-theme="dark"] .tbm-theme-label::before {
 
 .tbm-brand-mark {
   font-family: var(--tbm-display);
-  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  font-size: clamp(1.55rem, 2.6vw, 2.05rem);
   letter-spacing: 0.02em;
   line-height: 1;
   text-transform: uppercase;
@@ -238,7 +240,7 @@ html[data-theme="dark"] .tbm-theme-label::before {
 
 .tbm-brand-sub {
   font-family: var(--tbm-mono);
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   color: var(--tbm-mute);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -247,20 +249,20 @@ html[data-theme="dark"] .tbm-theme-label::before {
 .tbm-site-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: 0.4rem;
   align-items: center;
 }
 
 .tbm-site-tabs button {
   font-family: var(--tbm-mono);
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   background: transparent;
   color: var(--tbm-ink);
   border: 1px solid transparent;
   border-radius: 999px;
-  padding: 0.4rem 0.85rem;
+  padding: 0.5rem 1rem;
 }
 
 .tbm-site-tabs button:hover {
@@ -329,8 +331,8 @@ html[data-theme="dark"] .tbm-theme-label::before {
 }
 
 .tbm-home-lead {
-  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
-  max-width: 28rem;
+  font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+  max-width: 32rem;
   color: var(--tbm-mute);
   margin: 0 0 1.75rem;
   animation: tbm-rise 0.7s ease 0.08s both;
@@ -367,9 +369,9 @@ html[data-theme="dark"] .tbm-theme-label::before {
   border: 0;
   background: transparent;
   font-family: var(--tbm-serif);
-  font-size: clamp(0.95rem, 2vw, 1.08rem);
+  font-size: clamp(1.1rem, 2.2vw, 1.25rem);
   color: var(--tbm-ink);
-  padding: 1rem 1.1rem;
+  padding: 1.15rem 1.25rem;
   outline: none;
   border-radius: 2px 0 0 2px;
 }
@@ -389,9 +391,9 @@ html[data-theme="dark"] .tbm-theme-label::before {
   font-family: var(--tbm-mono);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  font-size: 0.72rem;
-  padding: 0 1.15rem;
-  margin: 0.35rem;
+  font-size: 0.88rem;
+  padding: 0 1.35rem;
+  margin: 0.4rem;
   border-radius: 2px;
   border: 1px solid var(--tbm-accent);
   background: var(--tbm-accent);
@@ -415,8 +417,8 @@ html[data-theme="dark"] .tbm-theme-label::before {
   font-family: var(--tbm-mono);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  font-size: 0.78rem;
-  padding: 0.7rem 1.1rem;
+  font-size: 0.9rem;
+  padding: 0.8rem 1.25rem;
   border-radius: 2px;
 }
 
@@ -434,7 +436,7 @@ html[data-theme="dark"] .tbm-theme-label::before {
 .tbm-home-note {
   margin-top: 1.75rem;
   font-family: var(--tbm-mono);
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   color: var(--tbm-mute);
   letter-spacing: 0.04em;
   animation: tbm-rise 0.7s ease 0.28s both;
@@ -777,10 +779,10 @@ html[data-theme="dark"] .tbm-theme-label::before {
 
 .tbm-docs-tabs [role="tab"] {
   font-family: var(--tbm-mono);
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 0.4rem 0.85rem;
+  padding: 0.5rem 1rem;
   border: 1px solid var(--tbm-line);
   background: var(--tbm-surface);
   color: var(--tbm-ink);
@@ -825,13 +827,13 @@ html[data-theme="dark"] .tbm-theme-label::before {
 
 .tbm-docs-toc a {
   font-family: var(--tbm-mono);
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   text-decoration: none;
   color: var(--tbm-ink);
   border: 1px solid var(--tbm-line);
-  padding: 0.35rem 0.55rem;
+  padding: 0.45rem 0.7rem;
   background: var(--tbm-surface);
 }
 
@@ -864,8 +866,8 @@ html[data-theme="dark"] .tbm-theme-label::before {
 .tbm-docs-body p,
 .tbm-docs-body li {
   color: var(--tbm-mute);
-  font-size: 0.98rem;
-  line-height: 1.55;
+  font-size: 1.08rem;
+  line-height: 1.6;
 }
 
 .tbm-docs-body ul,
@@ -949,33 +951,33 @@ html[data-theme="dark"] .tbm-theme-label::before {
 .eqir-lab-header {
   display: flex;
   align-items: center;
-  gap: 0.35rem 0.55rem;
+  gap: 0.45rem 0.65rem;
   flex-wrap: wrap;
-  margin: 0 0 0.55rem;
-  padding: 0.25rem 0 0.45rem;
+  margin: 0 0 0.7rem;
+  padding: 0.35rem 0 0.55rem;
   border-bottom: 1px solid var(--tbm-line);
 }
 
 .eqir-lab-header > h1 {
   margin: 0;
-  margin-right: 0.25rem;
-  font-size: 0.95rem;
-  line-height: 1.1;
+  margin-right: 0.3rem;
+  font-size: 1.2rem;
+  line-height: 1.15;
   white-space: nowrap;
 }
 
 .eqir-mode-nav {
   display: inline-flex;
-  gap: 0.2rem;
+  gap: 0.25rem;
   flex-shrink: 0;
 }
 
 .eqir-mode-nav button {
   font-family: var(--tbm-mono);
-  font-size: 0.65rem;
+  font-size: 0.8rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 0.28rem 0.55rem;
+  padding: 0.4rem 0.75rem;
   border-radius: 999px;
   background: transparent;
   border: 1px solid var(--tbm-line);
@@ -1060,8 +1062,8 @@ body[data-eqir-mode="simple"] #eqir-chain-hint,
 .tbm-page-lab .eqir-chain-nav button {
   color: var(--tbm-ink);
   border-color: var(--tbm-line);
-  font-size: 0.68rem;
-  padding: 0.28rem 0.55rem;
+  font-size: 0.82rem;
+  padding: 0.4rem 0.75rem;
   letter-spacing: 0.04em;
 }
 
@@ -1093,8 +1095,8 @@ html[data-theme="dark"] .tbm-page-lab .eqir-mod-nav button.active {
 }
 
 .tbm-page-lab .eqir-mod-nav button {
-  font-size: 0.68rem;
-  padding: 0.22rem 0.45rem;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.65rem;
 }
 
 .tbm-page-lab .eqir-mod-nav button.active {
@@ -1226,4 +1228,47 @@ html[data-theme="dark"] select:-webkit-autofill {
   -webkit-text-fill-color: var(--text) !important;
   box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
   transition: background-color 99999s ease-out;
+}
+
+/* —— Global readability bump (BIP / calc / XMR inherit lab density) —— */
+.hd-shell .top h1,
+.calc-shell .top h1,
+.xmr-shell .top h1 {
+  font-size: 1.45rem;
+}
+
+.hd-shell input,
+.hd-shell textarea,
+.hd-shell select,
+.calc-shell input,
+.calc-shell textarea,
+.calc-shell select,
+.xmr-shell input,
+.xmr-shell textarea,
+.xmr-shell select {
+  font-size: 14px !important;
+  padding: 0.4rem 0.55rem !important;
+}
+
+.hd-shell label,
+.calc-shell label,
+.xmr-shell label {
+  font-size: 12.5px !important;
+}
+
+.hd-shell button,
+.calc-shell button,
+.xmr-shell button {
+  font-size: 14px;
+  padding: 0.4rem 0.75rem;
+}
+
+.hd-table {
+  font-size: 13.5px;
+}
+
+.calc-card-lead,
+.tbm-page-bip .muted,
+.tbm-page-bip p.muted {
+  font-size: 0.95rem;
 }
