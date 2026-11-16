@@ -341,8 +341,8 @@ label {
   .wrap { order: 1; }
 }
 .top { margin-bottom: 0.4rem; }
-.top h1 { margin: 0; font-size: 1.05rem; line-height: 1.2; }
-.top p { margin: 0.15rem 0 0; color: var(--muted); font-size: 14px; max-width: 60rem; line-height: 1.35; }
+.top h1 { margin: 0; font-size: 1.35rem; line-height: 1.25; }
+.top p { margin: 0.2rem 0 0; color: var(--muted); font-size: 14.5px; max-width: 60rem; line-height: 1.4; }
 
 .card {
   background: var(--card); border: 1px solid var(--border);
