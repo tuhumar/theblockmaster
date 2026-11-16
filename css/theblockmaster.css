@@ -73,6 +73,9 @@ html[data-theme="dark"] {
   --der-col-c-line: #1e3a2a;
   --der-input-bg: #0a0e14;
   --der-input-border: #2a3a52;
+  --der-addr-bg: #152536;
+  --der-addr-border: #4a8fd4;
+  --der-addr-fg: #d6e8ff;
   --der-hl-u-bg: #132033;
   --der-hl-u-border: #3a6aa0;
   --der-hl-u-fg: #9ec5f5;
